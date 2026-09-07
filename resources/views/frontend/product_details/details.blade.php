@@ -95,7 +95,7 @@
             <span class="border border-secondary-base btn fs-12 ml-3 px-3 py-1 rounded-1 text-secondary">
                 {{ $detailedProduct->warranty->getTranslation('text')}}
                 @if($detailedProduct->warranty_note_id != null)
-                    <span href="javascript:void(1);" 
+                    <span href="javascript:void(1);"
                         data-toggle="modal" data-target="#warranty-note-modal"
                         class="border-bottom border-bottom-4 ml-2 text-secondary-base">
                         {{ translate('View Details') }}
@@ -519,7 +519,7 @@
         @endif
     @else
     <!-- Add to cart & Buy now Buttons -->
-   
+
 
     <div class="mt-3">
         @if ($detailedProduct->digital == 0)
@@ -602,15 +602,15 @@
                             @endif
                         </a>
                         @if($detailedProduct->refund_note_id != null)
-                            <span href="javascript:void(1);" 
+                            <span href="javascript:void(1);"
                                 data-toggle="modal" data-target="#refund-note-modal"
                                 class="border-bottom border-bottom-4 ml-2 text-secondary-base">
                                 {{ translate('Refund Note') }}
                             </span>
                         @endif
-                        
+
                         <a href="{{ route('returnpolicy') }}" class="text-blue hov-text-primary fs-14 ml-3" target="_blank">{{ translate('View Policy') }}</a>
-                        
+
                     @else
                         <div class="text-dark fs-14 fw-400 mt-2">{{ translate('Not Applicable') }}</div>
                     @endif

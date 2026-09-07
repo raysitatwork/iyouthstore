@@ -2,26 +2,36 @@
 
 namespace App\Models;
 
-use App\Models\Product;
 use App\Traits\PreventDemoModeChanges;
 use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class ProductsExport implements FromCollection, WithMapping, WithHeadings
+class CurrentStockExport implements FromCollection, WithMapping, WithHeadings
 {
     use PreventDemoModeChanges;
 
+    /**
+     * Export only admin physical products
+     */
     public function collection()
     {
-        return Product::all();
+        return Product::where('added_by', 'admin')
+            ->where('auction_product', 0)
+            ->where('wholesale_product', 0)
+            ->where('digital', 0)
+            ->with('stocks')
+            ->orderBy('id', 'asc')
+            ->get();
     }
 
+    /**
+     * Excel headings
+     */
     public function headings(): array
     {
         return [
-            'product_id', // IMPORTANT
+            'product_id',
 
             'name',
             'description',
@@ -34,12 +44,16 @@ class ProductsExport implements FromCollection, WithMapping, WithHeadings
             'video_link',
             'unit_price',
             'seller_price',
-            // 'seller_selling_price',
             'discount',
             'discount_type',
             'unit',
             'slug',
+
             'current_stock',
+
+            // Admin will fill this column
+            'assign_quantity',
+
             'est_shipping_days',
             'meta_title',
             'meta_description',
@@ -47,16 +61,24 @@ class ProductsExport implements FromCollection, WithMapping, WithHeadings
     }
 
     /**
-    * @var Product $product
-    */
+     * Map Product to Excel row
+     */
     public function map($product): array
     {
-        $qty = 0;
-        foreach ($product->stocks as $key => $stock) {
-            $qty += $stock->qty;
+        /*
+        |--------------------------------------------------------------------------
+        | Calculate Current Stock
+        |--------------------------------------------------------------------------
+        */
+
+        $currentStock = 0;
+
+        foreach ($product->stocks as $stock) {
+            $currentStock += (float) $stock->qty;
         }
+
         return [
-            $product->id, // IMPORTANT
+            $product->id,
 
             $product->name,
             $product->description,
@@ -69,12 +91,17 @@ class ProductsExport implements FromCollection, WithMapping, WithHeadings
             $product->video_link,
             $product->unit_price,
             $product->seller_price,
-            // $product->seller_selling_price,
             $product->discount,
             $product->discount_type,
             $product->unit,
             $product->slug,
-            $qty,
+
+            // Current available stock
+            $currentStock,
+
+            // Admin will enter assignment quantity
+            0,
+
             $product->est_shipping_days,
             $product->meta_title,
             $product->meta_description,

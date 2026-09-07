@@ -69,7 +69,7 @@ class AizUploadController extends Controller
     {
         return view('uploader.aiz-uploader');
     }
-    
+
     public function upload(Request $request)
     {
         $type = array(

@@ -16,7 +16,7 @@
                     $sellerOrderDetail = $order->orderDetails->where('seller_id', Auth::user()->id)->first();
                     $payment_status = optional($sellerOrderDetail)->payment_status ?? $order->payment_status;
                 @endphp
-                @if (get_setting('product_manage_by_admin') == 0)
+                @if (get_setting('product_manage_by_admin') == 1)
                     <div class="col-md-3 ml-auto">
                         <label for="update_payment_status">{{ translate('Payment Status') }}</label>
                         @if (
@@ -57,13 +57,13 @@
                                 value="{{ translate(ucfirst(str_replace('_', ' ', $delivery_status))) }}" disabled>
                         @endif
                     </div>
-                    <!--<div class="col-md-3 ml-auto">-->
-                    <!--    <label for="update_tracking_code">-->
-                    <!--        {{ translate('Tracking Code (optional)') }}-->
-                    <!--    </label>-->
-                    <!--    <input type="text" class="form-control" id="update_tracking_code"-->
-                    <!--        value="{{ $order->tracking_code }}">-->
-                    <!--</div>-->
+                    <div class="col-md-3 ml-auto">
+                        <label for="update_tracking_code">
+                            {{ translate('Tracking Code (optional)') }}
+                        </label>
+                        <input type="text" class="form-control" id="update_tracking_code"
+                            value="{{ $order->tracking_code }}">
+                    </div>
                 @endif
             </div>
             <div class="row gutters-5 mt-2">

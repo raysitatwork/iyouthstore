@@ -439,7 +439,12 @@ class SellerController extends Controller
             $shop->payment_status = $request->payment_status;
             $shop->payment_mode = $request->payment_mode;
             $shop->registration_approval = 1;
-            $shop->shop_id = $this->generateLocationUniqueId($request->district_id, $request->block_id, $request->sub_district_id);
+            // $shop->shop_id = $this->generateLocationUniqueId($request->district_id, $request->block_id, $request->sub_district_id);
+            $shop->shop_id = $this->generateLocationUniqueId(
+                $request->district_id,
+                $request->block_id,
+                $request->sub_district_id
+            );
             $shop->save();
 
             // try {
@@ -474,40 +479,91 @@ class SellerController extends Controller
         return back();
     }
 
-    function generateLocationUniqueId($districtId, $blockId, $subDistrictId)
+
+    private function generateLocationUniqueId($districtId, $blockId)
     {
-        return DB::transaction(function () use ($districtId, $blockId, $subDistrictId) {
+        return DB::transaction(function () use ($districtId, $blockId) {
 
+            // District
             $district = City::find($districtId);
+
             if (!$district) {
-                return null;
+                throw new \Exception('District not found.');
             }
 
-            $districtCode = $district->district_code;
+            // District Code
+            // Example: CG05
+            $districtCode = strtoupper(trim($district->district_code));
 
+            // CG05 → 05
+            $districtCode = preg_replace('/^CG/i', '', $districtCode);
+
+            // Block Name
             $blockName = Block::where('id', $blockId)->value('name');
-            $subDistrictName = SubDistrict::where('id', $subDistrictId)->value('name');
 
-            $prefix = $districtCode . '-' . $blockName . '-' . $subDistrictName;
-
-            $lastShop = Shop::where('shop_id', 'like', $prefix . '-%')
-                ->lockForUpdate()
-                ->orderBy('id', 'desc')
-                ->first();
-
-            if ($lastShop) {
-                $lastNumber = (int) substr(
-                    $lastShop->shop_id,
-                    strrpos($lastShop->shop_id, '-') + 1
-                );
-                $newNumber = $lastNumber + 1;
-            } else {
-                $newNumber = 1;
+            if (!$blockName) {
+                throw new \Exception('Block not found.');
             }
 
-            return $prefix . '-' . $newNumber;
+            $blockName = strtoupper(trim($blockName));
+
+            // Space / special character remove
+            $blockName = preg_replace('/[^A-Z0-9]+/', '', $blockName);
+
+            // Same District + Same Block seller count
+            $sellerCount = User::where('user_type', 'seller')
+                ->where('district', $districtId)
+                ->where('block', $blockId)
+                ->count();
+
+            // 01, 02, 03...
+            $serialNumber = str_pad(
+                $sellerCount,
+                2,
+                '0',
+                STR_PAD_LEFT
+            );
+
+            // Final Shop ID
+            return "IYS/{$districtCode}/{$blockName}/{$serialNumber}";
         });
     }
+
+    // Old code
+    // function generateLocationUniqueId($districtId, $blockId, $subDistrictId)
+    // {
+    //     return DB::transaction(function () use ($districtId, $blockId, $subDistrictId) {
+
+    //         $district = City::find($districtId);
+    //         if (!$district) {
+    //             return null;
+    //         }
+
+    //         $districtCode = $district->district_code;
+
+    //         $blockName = Block::where('id', $blockId)->value('name');
+    //         $subDistrictName = SubDistrict::where('id', $subDistrictId)->value('name');
+
+    //         $prefix = $districtCode . '-' . $blockName . '-' . $subDistrictName;
+
+    //         $lastShop = Shop::where('shop_id', 'like', $prefix . '-%')
+    //             ->lockForUpdate()
+    //             ->orderBy('id', 'desc')
+    //             ->first();
+
+    //         if ($lastShop) {
+    //             $lastNumber = (int) substr(
+    //                 $lastShop->shop_id,
+    //                 strrpos($lastShop->shop_id, '-') + 1
+    //             );
+    //             $newNumber = $lastNumber + 1;
+    //         } else {
+    //             $newNumber = 1;
+    //         }
+
+    //         return $prefix . '-' . $newNumber;
+    //     });
+    // }
 
     /**
      * Display the specified resource.
@@ -638,18 +694,25 @@ class SellerController extends Controller
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
+        /* Shop Details */
+        $shop->name = $request->name . "'s Shop";
 
         $shop->address = $request->shop_address;
         $shop->shop_size = $request->shop_size;
         $shop->rent_type = $request->rent_type;
         $shop->monthly_rent = $request->monthly_rent;
+
         $shop->bank_acc_no = $request->bank_acc_no;
         $shop->bank_name = $request->bank_name;
         $shop->bank_acc_name = $request->bank_acc_name;
         $shop->bank_routing_no = $request->bank_routing_no;
+
         $shop->security_deposit = $request->security_deposit;
         $shop->payment_status = $request->payment_status;
         $shop->payment_mode = $request->payment_mode;
+
+        // Generate / Update Shop ID
+        $shop->shop_id = $this->generateLocationUniqueId($request->district_id, $request->block_id);
 
         $user->save();
         $shop->save();
@@ -932,9 +995,9 @@ class SellerController extends Controller
     public function pendingSellers(Request $request)
     {
         $sort_search = $request->search ?? null;
-<<<<<<< Updated upstream
+
         $shops = Shop::where('registration_approval', 0)->with('user')->orderBy('created_at', 'desc');
-=======
+
 
         $district_id = $request->district_id ?? null;
         $block_id = $request->block_id ?? null;
@@ -943,7 +1006,7 @@ class SellerController extends Controller
         $shops = Shop::where('registration_approval', 0);
 
         $user_ids = User::where('user_type', 'seller');
->>>>>>> Stashed changes
+
 
         if ($sort_search != null) {
             $user_ids = $user_ids->where(function ($query) use ($sort_search) {
@@ -1059,7 +1122,7 @@ class SellerController extends Controller
     //         $toDate = now()->toDateString();
 
     //         $inactive_products = DB::select("
-    //     SELECT 
+    //     SELECT
     //         p.id,
     //         p.name,
     //         sp.created_at AS assigned_date,
@@ -1067,12 +1130,12 @@ class SellerController extends Controller
 
     //     FROM seller_products sp
 
-    //     JOIN products p 
+    //     JOIN products p
     //         ON p.id = sp.product_id
 
     //     LEFT JOIN
     //     (
-    //         SELECT 
+    //         SELECT
     //             seller_id,
     //             product_id,
     //             MAX(created_at) AS last_sold_date
@@ -1174,7 +1237,7 @@ class SellerController extends Controller
         if ($tab == 'inactive_products') {
 
             $inactive_products = DB::select("
-        SELECT 
+        SELECT
             p.id,
             p.name,
             sp.created_at AS assigned_date,
@@ -1182,12 +1245,12 @@ class SellerController extends Controller
 
         FROM seller_products sp
 
-        JOIN products p 
+        JOIN products p
             ON p.id = sp.product_id
 
         LEFT JOIN
         (
-            SELECT 
+            SELECT
                 seller_id,
                 product_id,
                 MAX(created_at) AS last_sold_date
@@ -1207,7 +1270,7 @@ class SellerController extends Controller
         )
 
         ORDER BY sp.created_at ASC
-    ", [$toDate, $shop->user_id, $toDate, $fromDate]);
+        ", [$toDate, $shop->user_id, $toDate, $fromDate]);
         }
 
         \Log::info($sellerProducts->first());

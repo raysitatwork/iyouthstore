@@ -321,6 +321,8 @@
 
 
 
+@include('frontend.megamart.partials.customer_note');
+
 
     <!-- Today's deal -->
     @php
@@ -337,7 +339,7 @@
     <!-- Featured Products -->
     <div id="section_featured">
 
-    </div>   
+    </div>
 
 
     @if (addon_is_activated('preorder'))

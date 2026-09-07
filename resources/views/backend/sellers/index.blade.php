@@ -305,7 +305,7 @@
                                     <span class="slider round"></span>
                                 </label>
                             </td>
-                            
+
                             <td>
                                 <div class="dropdown">
                                     <button type="button" class="btn btn-sm btn-circle btn-soft-primary btn-icon dropdown-toggle no-arrow" data-toggle="dropdown" href="javascript:void(0);" role="button" aria-haspopup="false" aria-expanded="false">
@@ -314,7 +314,7 @@
                                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-xs">
                                         @can('view_seller_profile')
                                             <!--<a href="{{ route('sellers.profile', encrypt($shop->id)) }}" class="dropdown-item">-->
-                                                
+
                                             <!--</a>-->
                                             <!--{{ translate('Profile') }}-->
                                         @endcan

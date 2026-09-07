@@ -65,6 +65,7 @@ use App\Http\Controllers\InactiveProductController;
 use App\Http\Controllers\ProfileUpdateRequestController;
 use App\Http\Controllers\Seller\PaymentController as SellerPaymentController;
 use App\Http\Controllers\SellerPurchaseController;
+use App\Http\Controllers\SellerRequestOrderController;
 
 /*
   |--------------------------------------------------------------------------
@@ -144,6 +145,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::get('/products/create', 'create')->name('products.create');
         Route::post('/products/store/', 'store')->name('products.store');
         Route::get('/products/assign', 'assign')->name('products.assign');
+        // Add
+        Route::get('/admin/products/assignment/export','exportAssignmentProducts')->name('products.assignment.export');
+        Route::get('/products/assign/export','exportCurrentStock')->name('products.assign.export');
+        Route::post('/product/assign/import', 'importSellerProducts')->name('product.assign.import');
         Route::post('/products/assign/store', 'assignProduct')->name('product.assign.store');
         Route::get('/products/admin/{id}/edit', 'admin_product_edit')->name('products.admin.edit');
         Route::get('/products/seller/{id}/edit', 'seller_product_edit')->name('products.seller.edit');
@@ -249,7 +254,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::post('/withdraw_request/message_modal', 'message_modal')->name('withdraw_request.message_modal');
     });
 
-    //payments 
+    //payments
 
     // Customer
     Route::resource('customers', CustomerController::class);
@@ -360,6 +365,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::get('/tax/edit/{id}', 'edit')->name('tax.edit');
         Route::get('/tax/destroy/{id}', 'destroy')->name('tax.destroy');
         Route::post('tax-status', 'change_tax_status')->name('taxes.tax-status');
+    });
+
+    // Seller Request Orders
+    Route::controller(SellerRequestOrderController::class)->group(function () {
+        Route::get('/seller-request-orders', 'index')
+            ->name('seller-request-orders.index');
+
+        Route::get('/seller-request-orders/{product_id}', 'show')
+            ->name('seller-request-orders.show');
     });
 
     //seller purchase
@@ -494,7 +508,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         // Order bulk export
         Route::get('/order-bulk-export', 'orderBulkExport')->name('order-bulk-export');
 
-        // 
+        //
         Route::post('order-payment-notification', 'unpaid_order_payment_notification_send')->name('unpaid_order_payment_notification');
     });
 

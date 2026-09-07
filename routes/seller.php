@@ -140,7 +140,6 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
     Route::post('location/update', [ProfileController::class, 'updateLocation'])->name('location.update');
 
     //Buy Products
-
     Route::get('comming-soon', [PurchaseController::class, 'comming_soon'])->name('comming_soon');
 
     Route::get('/buy/products', [PurchaseController::class, 'index'])->name('buy.products');

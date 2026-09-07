@@ -219,13 +219,14 @@
                                                         </td>
 
                                                           @php
-                                                        $total = $orderDetail->price('price');
-                                                        $gstAmount = ($total * 18) / 100;
-                                                        $productAmount = $total - $gstAmount;
-                                                    @endphp
+    $total = $orderDetail->price * $orderDetail->quantity;
+    $gstAmount = ($total * 18) / 100;
+    $productAmount = $total - $gstAmount;
+@endphp
 
-                                                        <td class="border-top-0 border-bottom pr-0 text-right">
-                                                            {{ single_price($productAmount) }}</td>
+<td class="border-top-0 border-bottom pr-0 text-right">
+    {{ single_price($productAmount) }}
+</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>

@@ -90,38 +90,139 @@ class ShopController extends Controller
     }
 
 
-    function generateLocationUniqueId($districtId, $blockId, $subDistrictId)
+    // function generateLocationUniqueId($districtId, $blockId, $subDistrictId)
+    // {
+    //     return DB::transaction(function () use ($districtId, $blockId, $subDistrictId) {
+
+    //         $district = City::find($districtId);
+    //         if (!$district) {
+    //             return null;
+    //         }
+
+    //         $districtCode = $district->district_code;
+
+    //         $blockName = Block::where('id', $blockId)->value('name');
+    //         $subDistrictName = SubDistrict::where('id', $subDistrictId)->value('name');
+
+    //         $prefix = $districtCode . '-' . $blockName . '-' . $subDistrictName;
+
+    //         $lastShop = Shop::where('shop_id', 'like', $prefix . '-%')
+    //             ->lockForUpdate()
+    //             ->orderBy('id', 'desc')
+    //             ->first();
+
+    //         if ($lastShop) {
+    //             $lastNumber = (int) substr(
+    //                 $lastShop->shop_id,
+    //                 strrpos($lastShop->shop_id, '-') + 1
+    //             );
+    //             $newNumber = $lastNumber + 1;
+    //         } else {
+    //             $newNumber = 1;
+    //         }
+
+    //         return $prefix . '-' . $newNumber;
+    //     });
+    // }
+
+    private function generateLocationUniqueId($districtId, $blockId, $subDistrictId)
     {
         return DB::transaction(function () use ($districtId, $blockId, $subDistrictId) {
 
+            /*
+        |--------------------------------------------------------------------------
+        | District
+        |--------------------------------------------------------------------------
+        */
+
             $district = City::find($districtId);
+
             if (!$district) {
-                return null;
+                throw new \Exception('District not found.');
             }
 
-            $districtCode = $district->district_code;
+
+            /*
+        |--------------------------------------------------------------------------
+        | District Code
+        |--------------------------------------------------------------------------
+        |
+        | Example:
+        | CG05 → 05
+        |
+        */
+
+            $districtCode = strtoupper(trim($district->district_code));
+
+            // CG हटाना
+            $districtCode = preg_replace('/^CG/i', '', $districtCode);
+
+
+            /*
+        |--------------------------------------------------------------------------
+        | Block Name
+        |--------------------------------------------------------------------------
+        */
 
             $blockName = Block::where('id', $blockId)->value('name');
-            $subDistrictName = SubDistrict::where('id', $subDistrictId)->value('name');
 
-            $prefix = $districtCode . '-' . $blockName . '-' . $subDistrictName;
-
-            $lastShop = Shop::where('shop_id', 'like', $prefix . '-%')
-                ->lockForUpdate()
-                ->orderBy('id', 'desc')
-                ->first();
-
-            if ($lastShop) {
-                $lastNumber = (int) substr(
-                    $lastShop->shop_id,
-                    strrpos($lastShop->shop_id, '-') + 1
-                );
-                $newNumber = $lastNumber + 1;
-            } else {
-                $newNumber = 1;
+            if (!$blockName) {
+                throw new \Exception('Block not found.');
             }
 
-            return $prefix . '-' . $newNumber;
+            $blockName = strtoupper(trim($blockName));
+
+            // Space / special character remove
+            $blockName = preg_replace('/[^A-Z0-9]+/', '', $blockName);
+
+
+            /*
+        |--------------------------------------------------------------------------
+        | Same District + Same Block Sellers
+        |--------------------------------------------------------------------------
+        |
+        | इस registration में users table में
+        | district और block के NAME save हो रहे हैं।
+        |
+        */
+
+            $districtName = $district->name;
+
+            $sellerCount = User::where('user_type', 'seller')
+                ->where('district', $districtName)
+                ->where('block', $blockName)
+                ->count();
+
+
+            /*
+        |--------------------------------------------------------------------------
+        | Serial Number
+        |--------------------------------------------------------------------------
+        |
+        | First seller  = 01
+        | Second seller = 02
+        | Third seller  = 03
+        |
+        */
+
+            $serialNumber = str_pad(
+                $sellerCount,
+                2,
+                '0',
+                STR_PAD_LEFT
+            );
+
+
+            /*
+        |--------------------------------------------------------------------------
+        | Final Shop ID
+        |--------------------------------------------------------------------------
+        |
+        | IYS/05/MAGARLOD/01
+        |
+        */
+
+            return "IYS/{$districtCode}/{$blockName}/{$serialNumber}";
         });
     }
 

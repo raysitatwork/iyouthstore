@@ -321,7 +321,7 @@
                 }
             });
         }
-        
+
         function order_bulk_export (){
             var url = '{{route('order-bulk-export')}}';
             $("#sort_orders").attr("action", url);

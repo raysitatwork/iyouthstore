@@ -45,20 +45,20 @@
                 $truncateAt = 200;
                 $shortDescription = Str::limit(strip_tags($fullDescription), $truncateAt, '');
             @endphp
-            
+
             <div class="footer-desc-container">
                 <!-- Desktop view -->
                 <div class="d-none d-md-block fs-13 text-gray-dark text-justify">
                     {!! $fullDescription !!}
                 </div>
-                
+
                 <!-- Mobile view -->
                 <div class="d-md-none">
                     <div class="footer-short-desc fs-13 text-gray-dark text-justify">
                         {!! $shortDescription !!}
                         @if(strlen(strip_tags($fullDescription)) > $truncateAt)
-                            <a class="footer-read-more text-primary cursor-pointer" 
-                               data-toggle="collapse" 
+                            <a class="footer-read-more text-primary cursor-pointer"
+                               data-toggle="collapse"
                                href="#footerMobileDesc">
                                 ... Read more
                             </a>
@@ -151,7 +151,7 @@
         </div>
         <div class="row">
             <!-- about & subscription -->
-            
+
             <div class="col-xl-6 col-lg-7">
                 <div class="mb-4 text-secondary text-justify">
                     {!! get_setting('about_us_description',null,App::getLocale()) !!}

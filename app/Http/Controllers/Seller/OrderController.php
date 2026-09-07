@@ -563,8 +563,8 @@ class OrderController extends Controller
             <div class="card-body d-flex align-items-center justify-content-between">
 
                 <div class="form-check d-flex align-items-center">
-                    <input class="form-check-input me-3" type="checkbox" 
-                        name="order_detail_ids[]" value="' . $detail->id . '" 
+                    <input class="form-check-input me-3" type="checkbox"
+                        name="order_detail_ids[]" value="' . $detail->id . '"
                         id="product_' . $detail->id . '">
 
                     <label class="form-check-label fw-semibold" for="product_' . $detail->id . '">
@@ -860,14 +860,14 @@ class OrderController extends Controller
                 }
             }
 
-      
+
             $order->grand_total = $acceptedTotal;
             $order->seller_id = Auth::id();
             $order->status = 'confirmed';
             $order->delivery_status = 'confirmed';
             $order->save();
 
-       
+
             OrderSellerQueue::where('order_id', $order->id)
                 ->where('seller_id', Auth::id())
                 ->update(['status' => 'accepted']);
@@ -885,7 +885,7 @@ class OrderController extends Controller
                     })
                     ->values();
 
-  
+
                 $newOrder = $order->replicate();
                 $newOrder->seller_id = null;
                 $newOrder->status = 'pending_acceptance';

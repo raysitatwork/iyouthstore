@@ -57,6 +57,7 @@ class HomeController extends Controller
             return Category::with('bannerImage')->where('featured', 1)->get();
         });
 
+        //change
         $coming_soon_products = Product::where('coming_soon', 1)->orderBy('id', 'desc')->get();
 
         return view('frontend.' . get_setting('homepage_select') . '.index', compact('featured_categories', 'lang', 'coming_soon_products'));
@@ -151,6 +152,7 @@ class HomeController extends Controller
         return view('frontend.' . get_setting('homepage_select') . '.partials.todays_deal', compact('todays_deal_products'));
     }
 
+    //change
     public function load_coming_soon_section()
 {
     $coming_soon_products = Product::where('coming_soon', 1)

@@ -10,12 +10,14 @@ use App\Models\ProductTranslation;
 use App\Models\Category;
 use App\Models\AttributeValue;
 use App\Models\Cart;
+use App\Models\CurrentStockExport;
 use App\Models\OutOfStockRequest;
 use App\Models\ProductStock;
 use App\Models\ProductCategory;
 use App\Models\SellerProduct;
 use App\Models\Review;
 use App\Models\SellerProductAssignment;
+use App\Models\SellerProductImport;
 use App\Models\Shop;
 use DB;
 use App\Models\Wishlist;
@@ -33,6 +35,7 @@ use App\Services\FrequentlyBoughtProductService;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -194,6 +197,61 @@ class ProductController extends Controller
         return view('backend.product.products.create', compact('categories'));
     }
 
+    public function importSellerProducts(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+
+            'file' => [
+                'required',
+                'file',
+                'mimes:xlsx,xls,csv',
+                'max:10240',
+            ],
+        ]);
+
+
+        try {
+
+            Excel::import(
+                new SellerProductImport($request->user_id),
+                $request->file('file')
+            );
+
+
+            return redirect()
+                ->back()
+                ->with(
+                    'success',
+                    'All products imported and assigned to seller successfully.'
+                );
+        } catch (\Throwable $e) {
+
+            return redirect()
+                ->back()
+                ->with(
+                    'error',
+                    $e->getMessage()
+                );
+        }
+    }
+
+    public function exportCurrentStock()
+    {
+        return Excel::download(
+            new CurrentStockExport(),
+            'current_stock_assignment.xlsx'
+        );
+    }
+
+    public function exportAssignmentProducts()
+    {
+        return Excel::download(
+            new \App\Models\SellerProductAssignmentExport(),
+            'seller_product_assignment.xlsx'
+        );
+    }
+
     public function assign()
     {
 
@@ -299,14 +357,15 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    //change
     public function store(ProductRequest $request)
     {
         // Coming Soon checkbox:
         // checked = 1
-         // unchecked = 0
-          $request->merge([
+        // unchecked = 0
+        $request->merge([
             'coming_soon' => $request->has('coming_soon') ? 1 : 0,
-            ]);
+        ]);
 
         $product = $this->productService->store($request->except([
             '_token',
@@ -444,14 +503,16 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    //change
     public function update(ProductRequest $request, Product $product)
     {
         // Coming Soon checkbox:
-         // checked = 1
-         // unchecked = 0
-         $request->merge([
-             'coming_soon' => $request->has('coming_soon') ? 1 : 0,
-             ]);
+        // checked = 1
+        // unchecked = 0
+        $request->merge([
+            'coming_soon' => $request->has('coming_soon') ? 1 : 0,
+        ]);
 
         //Product
         $product = $this->productService->update($request->except([
@@ -643,16 +704,16 @@ class ProductController extends Controller
     }
 
     public function updateComingSoon(Request $request)
-{
-    $product = Product::findOrFail($request->id);
+    {
+        $product = Product::findOrFail($request->id);
 
-    $product->coming_soon = $request->status;
-    $product->save();
+        $product->coming_soon = $request->status;
+        $product->save();
 
-    Cache::forget('coming_soon_products');
+        Cache::forget('coming_soon_products');
 
-    return 1;
-}
+        return 1;
+    }
 
     public function updatePublished(Request $request)
     {
@@ -833,7 +894,7 @@ class ProductController extends Controller
         // }
 
         if ($request->search) {
-<<<<<<< Updated upstream
+
             $query->where(function ($q) use ($request) {
                 $q->where('users.name', 'like', '%' . $request->search . '%')
                     ->orWhere('shops.shop_id', 'like', '%' . $request->search . '%');
@@ -843,22 +904,22 @@ class ProductController extends Controller
         $sellers = $query->paginate(10)->withQueryString();
 
         return view('backend.assignment_history.index', compact('sellers'));
-=======
 
-            $query->where(function ($q) use ($request) {
 
-                $q->where(
-                    'users.name',
+        $query->where(function ($q) use ($request) {
+
+            $q->where(
+                'users.name',
+                'like',
+                '%' . $request->search . '%'
+            )
+                ->orWhere(
+                    'shops.shop_id',
                     'like',
                     '%' . $request->search . '%'
-                )
-                    ->orWhere(
-                        'shops.shop_id',
-                        'like',
-                        '%' . $request->search . '%'
-                    );
-            });
-        }
+                );
+        });
+
         if ($district_id != null) {
             $query->where(
                 'users.district',
@@ -887,7 +948,6 @@ class ProductController extends Controller
             'block_id',
             'sub_district_id'
         ));
->>>>>>> Stashed changes
     }
     public function showAssignmentHistory($seller_id)
     {
@@ -1049,15 +1109,15 @@ class ProductController extends Controller
         ));
     }
 
-<<<<<<< Updated upstream
-    public function OutOfStockRequests()
-    {
-        $requests = OutOfStockRequest::with(['user', 'product'])
-            ->latest()
-            ->paginate();
 
-        return view('backend.out_of_stock.out_of_stock', compact('requests'));
-=======
+    // public function OutOfStockRequests()
+    // {
+    //     $requests = OutOfStockRequest::with(['user', 'product'])
+    //         ->latest()
+    //         ->paginate();
+
+    //     return view('backend.out_of_stock.out_of_stock', compact('requests'));
+
     // public function OutOfStockRequests(){
     //     $requests = OutOfStockRequest::with(['user','product'])
     //     ->latest()
@@ -1074,7 +1134,7 @@ class ProductController extends Controller
 
         // $requests = OutOfStockRequest::with(['user', 'product']);
         $requests = OutOfStockRequest::with(['user', 'product'])
-    ->whereHas('user');
+            ->whereHas('user');
 
         if (
             $district_id != null ||
@@ -1145,6 +1205,5 @@ class ProductController extends Controller
                 'sub_district_id'
             )
         );
->>>>>>> Stashed changes
     }
 }

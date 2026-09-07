@@ -400,7 +400,7 @@ class OrderController extends Controller
     // ", [$customerLat, $customerLng, $customerLat])
     //         ->where('registration_approval', 1)
     //         ->where('verification_status', 1)
-    //         ->having('distance', '<=', 20) // 
+    //         ->having('distance', '<=', 20) //
     //         ->orderBy('distance')
     //         // ->first();
     //         ->get();
@@ -501,7 +501,7 @@ class OrderController extends Controller
 
     //         $shipping += $order_detail->shipping_cost;
 
-    //         // Stock update --- commentted 
+    //         // Stock update --- commentted
     //         // if ($product->digital != 1) {
     //         //     $stock = $product->stocks->where('variant', $cartItem['variation'])->first();
     //         //     if ($stock && $stock->qty >= $cartItem['quantity']) {

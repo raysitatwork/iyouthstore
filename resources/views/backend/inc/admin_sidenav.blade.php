@@ -173,7 +173,8 @@
                                                 </a>
                                             </li>
                                             <li class="aiz-side-nav-item">
-                                                <a href="{{ route('products.seller', 'digital') }}" class="aiz-side-nav-link">
+                                                <a href="{{ route('products.seller', 'digital') }}"
+                                                    class="aiz-side-nav-link">
                                                     <span class="aiz-side-nav-text">{{ translate('Digital Products') }}</span>
                                                 </a>
                                             </li>
@@ -767,11 +768,61 @@
                             @endif
 
                             <li class="aiz-side-nav-item">
+                                <a href="{{ route('seller-request-orders.index') }}"
+                                    class="aiz-side-nav-link {{ areActiveRoutes(['seller-request-orders.index', 'seller-request-orders.show']) }}">
+
+                                    <span class="aiz-side-nav-text">
+                                        {{ translate('Seller Request Orders') }}
+                                    </span>
+
+                                </a>
+                            </li>
+
+                            {{-- @can('view_seller_orders')
+                                <li class="aiz-side-nav-item">
+                                    <a href="{{ route('seller_orders.index') }}"
+                                        class="aiz-side-nav-link {{ areActiveRoutes(['seller_orders.index', 'seller_orders.show']) }}">
+                                        <span class="aiz-side-nav-text">
+                                            {{ translate('Seller Orders') }}
+                                        </span>
+                                    </a>
+                                </li>
+                            @endcan
+
+
+                            <li class="aiz-side-nav-item">
+
+                                <a href="{{ route('seller-request-orders.index') }}"
+                                    class="aiz-side-nav-link {{ areActiveRoutes(['seller-request-orders.index', 'seller-request-orders.show']) }}">
+
+                                    <span class="aiz-side-nav-text">
+                                        {{ translate('Seller Request Orders') }}
+                                    </span>
+
+                                </a>
+
+                            </li>
+
+
+                            <li class="aiz-side-nav-item">
+
+                                <a href="{{ route('seller-purchases.index') }}"
+                                    class="aiz-side-nav-link {{ areActiveRoutes(['seller-purchases.index', 'seller-purchases.show']) }}">
+
+                                    <span class="aiz-side-nav-text">
+                                        {{ translate('Seller Purchases') }}
+                                    </span>
+
+                                </a>
+
+                            </li>
+
+                            <li class="aiz-side-nav-item">
                                 <a href="{{ route('seller-purchases.index') }}"
                                     class="aiz-side-nav-link {{ areActiveRoutes(['seller-purchases.index', 'seller-purchases.show']) }}">
                                     <span class="aiz-side-nav-text">{{ translate('Seller Purchases') }}</span>
                                 </a>
-                            </li>
+                            </li> --}}
 
 
 
@@ -1026,6 +1077,11 @@
                                 <li class="aiz-side-nav-item">
                                     <a class="aiz-side-nav-link" href="{{ route('products.assign') }}">
                                         <span class="aiz-side-nav-text">{{ translate('Assign Product') }}</span>
+                                    </a>
+                                </li>
+                                <li class="aiz-side-nav-item">
+                                    <a class="aiz-side-nav-link" href="{{ route('assignment.history.index') }}">
+                                        <span class="aiz-side-nav-text">{{ translate('Product Assignment History') }}</span>
                                     </a>
                                 </li>
                                 <li class="aiz-side-nav-item">
@@ -1897,7 +1953,7 @@
                                                         class="aiz-side-nav-link">
                                                         <span
                                                             class="aiz-side-nav-text">{{ translate('Offline Customer Package
-                                                                                                        Payments') }}</span>
+                                                                                                                                                                                                                                Payments') }}</span>
                                                     </a>
                                                 </li>
                                             @endif
@@ -1970,20 +2026,20 @@
                                 </li>
                             @endcan
                             <!-- @can('show_element')
-                                        <li class="aiz-side-nav-item">
-                                            <a href="javascript:void(0);" class="aiz-side-nav-link">
-                                                <span class="aiz-side-nav-text">{{ translate('Element') }}</span>
-                                                <span class="aiz-side-nav-arrow"></span>
-                                            </a>
-                                            <ul class="aiz-side-nav-list level-3">
-                                                <li class="aiz-side-nav-item">
-                                                    <a href="{{ route('elements.index') }}" class="aiz-side-nav-link">
-                                                        <span class="aiz-side-nav-text">{{ translate('All Elements') }}</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                @endcan -->
+                                                        <li class="aiz-side-nav-item">
+                                                            <a href="javascript:void(0);" class="aiz-side-nav-link">
+                                                                <span class="aiz-side-nav-text">{{ translate('Element') }}</span>
+                                                                <span class="aiz-side-nav-arrow"></span>
+                                                            </a>
+                                                            <ul class="aiz-side-nav-list level-3">
+                                                                <li class="aiz-side-nav-item">
+                                                                    <a href="{{ route('elements.index') }}" class="aiz-side-nav-link">
+                                                                        <span class="aiz-side-nav-text">{{ translate('All Elements') }}</span>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                        @endcan -->
                             @can('select_header')
                                 <li class="aiz-side-nav-item">
                                     <a href="{{ route('website.select-header') }}" class="aiz-side-nav-link">
@@ -2105,7 +2161,7 @@
                                     <a href="{{ route('file_system.index') }}" class="aiz-side-nav-link">
                                         <span
                                             class="aiz-side-nav-text">{{ translate('File System & Cache
-                                                                                Configuration') }}</span>
+                                                                                                                                                                        Configuration') }}</span>
                                     </a>
                                 </li>
                             @endcan
@@ -2129,7 +2185,7 @@
                                         <span class="aiz-side-nav-text">{{translate('Facebook Chat')}}</span>
                                     </a>
                                 </li>
-                                
+
                 <!--                @endcan --}}-->
 
                                         @can('whatsapp_chat')
