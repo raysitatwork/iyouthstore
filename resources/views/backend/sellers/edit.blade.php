@@ -19,16 +19,18 @@
             </div>
 
             <div class="card-body">
-                <form action="{{ route('sellers.update', $shop->id) }}" method="POST">
+                {{-- <form action="{{ route('sellers.update', $shop->id) }}" method="POST"> --}}
+                <form action="{{ route('sellers.update', $shop->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="name">{{ translate('Name') }} <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @if ($errors->has('name')) is-invalid @endif"
-                                    name="name" value="{{ old('name', $shop->user->name) }}"
-                                    placeholder="{{ translate('Name') }}" required>
+                                <input type="text"
+                                    class="form-control @if ($errors->has('name')) is-invalid @endif" name="name"
+                                    value="{{ old('name', $shop->user->name) }}" placeholder="{{ translate('Name') }}"
+                                    required>
                                 @if ($errors->has('name'))
                                     <span class="invalid-feedback d-block" role="alert">
                                         <strong>{{ $errors->first('name') }}</strong>
@@ -42,11 +44,34 @@
                                 <label for="email">{{ translate('Email') }} <span class="text-danger">*</span></label>
                                 <input type="email"
                                     class="form-control @if ($errors->has('email')) is-invalid @endif"
-                                    value="{{ old('email', $shop->user->email) }}"
-                                    placeholder="{{ translate('Email') }}" name="email" required>
+                                    value="{{ old('email', $shop->user->email) }}" placeholder="{{ translate('Email') }}"
+                                    name="email" required>
                                 @if ($errors->has('email'))
                                     <span class="invalid-feedback d-block" role="alert">
                                         <strong>{{ $errors->first('email') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>{{ translate('Seller Image') }}</label>
+                                <input type="file" class="form-control" name="image" accept="image/*">
+                                <small class="text-muted">Image is optional.</small>
+
+                                @if ($shop->user->image)
+                                    <div class="mt-2">
+                                        <img src="{{ asset('storage/' . $shop->user->image) }}"
+                                            class="size-40px img-fit rounded-circle mr-2" alt="User Image"
+                                            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+                                    </div>
+                                @endif
+
+                                @if ($errors->has('image'))
+                                    <span class="invalid-feedback d-block">
+                                        <strong>{{ $errors->first('image') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -196,8 +221,7 @@
                             <div class="form-group">
                                 <label>{{ translate('Postal Code') }}</label>
                                 <input type="text" class="form-control" name="postal_code"
-                                    value="{{ old('postal_code', $shop->user->postal_code) }}"
-                                    placeholder="Postal Code">
+                                    value="{{ old('postal_code', $shop->user->postal_code) }}" placeholder="Postal Code">
                             </div>
                         </div>
                     </div>
@@ -304,8 +328,7 @@
                             <div class="form-group">
                                 <label>{{ translate('Branch Name') }}</label>
                                 <input type="text" class="form-control" name="bank_acc_name"
-                                    value="{{ old('bank_acc_name', $shop->bank_acc_name) }}"
-                                    placeholder="Branch Name">
+                                    value="{{ old('bank_acc_name', $shop->bank_acc_name) }}" placeholder="Branch Name">
                             </div>
                         </div>
 
@@ -382,7 +405,7 @@
             let selectedBlock = $('.block-select').val();
             let selectedSub = $('.subdistrict-select').val();
 
-     
+
             $('.block-select option').hide();
             $('.block-select option:first').show();
 

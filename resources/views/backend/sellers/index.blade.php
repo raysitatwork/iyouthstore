@@ -21,12 +21,10 @@
                         <a class="dropdown-item confirm-alert" href="javascript:void(0)"
                             data-target="#bulk-delete-modal">{{ translate('Delete selection') }}</a>
                     @endcan
-                    <!--@can('seller_commission_configuration')
-        -->
+                    <!--@can('seller_commission_configuration')-->
                         <!--    <a class="dropdown-item confirm-alert"-->
                         <!--        onclick="set_bulk_commission()">{{ translate('Set Bulk Commission') }}</a>-->
-                        <!--
-    @endcan-->
+                        <!--@endcan-->
                 </div>
             </div>
             @if (auth()->user()->can('add_seller') && $route == 'all_seller_route')

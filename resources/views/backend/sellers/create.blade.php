@@ -16,7 +16,8 @@
                     <h5 class="mb-0 h6">{{ translate('Seller Information') }}</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('sellers.store') }}" method="POST">
+                    {{-- <form action="{{ route('sellers.store') }}" method="POST"> --}}
+                    <form action="{{ route('sellers.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
@@ -50,6 +51,30 @@
                                 </div>
                             </div>
                         </div>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>{{ translate('Seller Image') }}</label>
+            <input type="file"
+                class="form-control @if ($errors->has('image')) is-invalid @endif"
+                name="image"
+                accept="image/jpg,image/jpeg,image/png,image/webp">
+
+            <small class="text-muted">
+                Image is optional. JPG, JPEG, PNG, WEBP allowed.
+            </small>
+
+            @if ($errors->has('image'))
+                <span class="invalid-feedback d-block">
+                    <strong>{{ $errors->first('image') }}</strong>
+                </span>
+            @endif
+        </div>
+    </div>
+</div>
+
 
                         <div class="row">
                             <div class="col-md-4">
@@ -361,27 +386,27 @@
 
 
                             {{-- <div class="form-group row">
-                    <label class="col-sm-2 col-from-label" for="shop_name">{{ translate('Shop Name') }}</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control rounded-0 @if ($errors->has('shop_name')) is-invalid @endif" value="{{ old('shop_name') }}" placeholder="{{  translate('Shop Name') }}" name="shop_name">
-                        @if ($errors->has('shop_name'))
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('shop_name') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                </div> --}}
+                                    <label class="col-sm-2 col-from-label" for="shop_name">{{ translate('Shop Name') }}</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control rounded-0 @if ($errors->has('shop_name')) is-invalid @endif" value="{{ old('shop_name') }}" placeholder="{{  translate('Shop Name') }}" name="shop_name">
+                                        @if ($errors->has('shop_name'))
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $errors->first('shop_name') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div> --}}
                             {{-- <div class="form-group row">
-                    <label class="col-sm-2 col-from-label" for="address">{{ translate('Address') }}</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control rounded-0 @if ($errors->has('address')) is-invalid @endif" value="{{ old('address') }}" placeholder="{{  translate('Address') }}" name="address">
-                        @if ($errors->has('address'))
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $errors->first('address') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-                </div> --}}
+                                    <label class="col-sm-2 col-from-label" for="address">{{ translate('Address') }}</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control rounded-0 @if ($errors->has('address')) is-invalid @endif" value="{{ old('address') }}" placeholder="{{  translate('Address') }}" name="address">
+                                        @if ($errors->has('address'))
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $errors->first('address') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div> --}}
                             <div class="form-group mb-0 text-right">
                                 <button type="submit" class="btn btn-primary">{{ translate('Save') }}</button>
                             </div>

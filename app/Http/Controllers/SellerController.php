@@ -32,8 +32,10 @@ use Illuminate\Support\Facades\Log as FacadesLog;
 use Illuminate\Support\Facades\Notification;
 use Log;
 use DB;
+// use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
+use Storage;
 
 class SellerController extends Controller
 {
@@ -342,6 +344,7 @@ class SellerController extends Controller
     {
         $request->validate(
             [
+                'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5048',
                 'name' => 'required|max:255',
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required|min:6|confirmed',
@@ -395,6 +398,21 @@ class SellerController extends Controller
         // }
 
         $user           = new User;
+
+        if ($request->hasFile('image')) {
+            $uploadPath = public_path('storage/uploads/users');
+
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+
+            $image = $request->file('image');
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+
+            $image->move($uploadPath, $imageName);
+
+            $user->image = 'uploads/users/' . $imageName;
+        }
         $user->name     = $request->name;
         $user->email    = $request->email;
         $user->user_type = "seller";
@@ -634,6 +652,7 @@ class SellerController extends Controller
         $user = $shop->user;
 
         $request->validate([
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|min:6|confirmed',
@@ -670,6 +689,28 @@ class SellerController extends Controller
 
 
 
+        if ($request->hasFile('image')) {
+            if ($user->image) {
+                $oldImage = public_path('storage/' . $user->image);
+
+                if (file_exists($oldImage)) {
+                    unlink($oldImage);
+                }
+            }
+
+            $uploadPath = public_path('storage/uploads/users');
+
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+
+            $image = $request->file('image');
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+
+            $image->move($uploadPath, $imageName);
+
+            $user->image = 'uploads/users/' . $imageName;
+        }
         $user->name = $request->name;
         $user->email = $request->email;
         $user->gender = $request->gender;
@@ -712,7 +753,7 @@ class SellerController extends Controller
         $shop->payment_mode = $request->payment_mode;
 
         // Generate / Update Shop ID
-        $shop->shop_id = $this->generateLocationUniqueId($request->district_id, $request->block_id);
+        // $shop->shop_id = $this->generateLocationUniqueId($request->district_id, $request->block_id);
 
         $user->save();
         $shop->save();
@@ -1482,6 +1523,7 @@ class SellerController extends Controller
     //     return back();
     // }
 
+    //New method
     public function bulk_store(Request $request)
     {
         $request->validate([
@@ -1489,219 +1531,201 @@ class SellerController extends Controller
         ]);
 
         $worksheets = Excel::toArray([], $request->file('file'));
-
         $success = 0;
         $skipped = 0;
         $skipReasons = [];
 
+        $normalize = function ($value) {
+            $value = trim((string) $value);
+            $value = str_replace("\xc2\xa0", ' ', $value);
+            return strtolower(preg_replace('/\s+/', ' ', $value));
+        };
+
+        $findColumn = function (array $normalizedHeaders, array $candidates, $defaultIndex = null) {
+            foreach ($normalizedHeaders as $index => $header) {
+                if (in_array(strtolower(trim((string) $header)), $candidates, true)) {
+                    return $index;
+                }
+            }
+            return $defaultIndex;
+        };
+
         foreach ($worksheets as $sheetIndex => $rows) {
             $titleRow = $rows[0] ?? [];
             $headerRow = $rows[1] ?? [];
-            $sheetTitle = trim((string) ($titleRow[0] ?? ''));
-
             $normalizedHeaders = [];
+
             foreach ($headerRow as $headerIndex => $headerValue) {
-                $normalizedHeaders[$headerIndex] = strtolower(trim((string) $headerValue));
+                $header = strtolower(trim((string) $headerValue));
+                $header = str_replace("\xc2\xa0", ' ', $header);
+                $normalizedHeaders[$headerIndex] = preg_replace('/\s+/', ' ', $header);
             }
 
-            $findColumn = function (array $candidates, $defaultIndex = null) use ($normalizedHeaders) {
-                foreach ($normalizedHeaders as $index => $header) {
-                    if (in_array($header, $candidates, true)) {
-                        return $index;
-                    }
-                }
-
-                return $defaultIndex;
-            };
-
-            $nameCol = $findColumn(['name'], 1);
-            $genderCol = $findColumn(['gender'], 2);
-            $fatherCol = $findColumn(['pita/pati'], 3);
-            $dobCol = $findColumn(['dob'], 4);
-            $ageCol = $findColumn(['age'], 5);
-            $aadhaarCol = $findColumn(['adhar', 'aadhaar'], 6);
-            $panCol = $findColumn(['pan'], 7);
-            $addressCol = $findColumn(['address'], 8);
-            $gramCol = $findColumn(['grampanchayat'], 9);
-            $subCol = $findColumn(['janpat panchayat'], 10);
-            $districtCol = $findColumn(['zila', 'district'], null);
-            $stateCol = $findColumn(['state'], null);
-            $pincodeCol = $findColumn(['pin code', 'pincode'], 13);
-            $phoneCol = $findColumn(['mobile no.', 'mobile no', 'mobile'], 14);
-            $altCol = $findColumn(['alternate numbers', 'alternate number'], 15);
-            $whatsappCol = $findColumn(['whatsapp no.', 'whatsapp no'], 16);
-            $emailCol = $findColumn(['email id', 'email'], 17);
-            $qualificationCol = $findColumn(['qualification'], 18);
-            $experienceCol = $findColumn(['exprience', 'experience'], 19);
-            $shopAddressCol = $findColumn(["store's add.", 'store add.', 'store address'], 20);
-            $shopSizeCol = $findColumn(['shop size'], 21);
-            $rentTypeCol = $findColumn(['own / rented', 'own/rented'], 22);
-            $monthlyRentCol = $findColumn(['monthly rent'], 23);
-            $accountNoCol = $findColumn(['bank ac/no.', 'bank ac/no', 'bank account no.'], 24);
-            $bankNameCol = $findColumn(['bank name'], 25);
-            $branchCol = $findColumn(['branch name'], 26);
-            $ifscCol = $findColumn(['ifsc code', 'ifsc'], 27);
-            $securityCol = $findColumn(['security deposit'], 28);
-            $paymentStatusCol = $findColumn(['paid/unpaid'], 29);
-            $paymentModeCol = $findColumn(['mode of payment'], 30);
+            $srCol = $findColumn($normalizedHeaders, ['sr', 's.no', 's no', 'serial no'], 0);
+            $storeIdCol = $findColumn($normalizedHeaders, ['store id', 'storeid', 'shop id', 'shop_id'], 1);
+            $nameCol = $findColumn($normalizedHeaders, ['name'], 2);
+            $genderCol = $findColumn($normalizedHeaders, ['gender', 'sex'], 3);
+            $fatherCol = $findColumn($normalizedHeaders, ['pita/pati', 'pita / pati', 'father/husband', 'father husband name'], 4);
+            $dobCol = $findColumn($normalizedHeaders, ['dob', 'date of birth'], 5);
+            $ageCol = $findColumn($normalizedHeaders, ['age'], 6);
+            $aadhaarCol = $findColumn($normalizedHeaders, ['adhar', 'aadhaar', 'aadhar', 'aadhar no', 'aadhaar no'], 7);
+            $panCol = $findColumn($normalizedHeaders, ['pan', 'pan no', 'pan number'], 8);
+            $addressCol = $findColumn($normalizedHeaders, ['address'], 9);
+            $gramCol = $findColumn($normalizedHeaders, ['grampanchayat', 'gram panchayat', 'gram panchayat name'], 10);
+            $subCol = $findColumn($normalizedHeaders, ['janpat panchayat', 'janpad panchayat', 'janpat', 'janpad'], 11);
+            $districtCol = $findColumn($normalizedHeaders, ['zila', 'district'], 12);
+            $stateCol = $findColumn($normalizedHeaders, ['state'], null);
+            $pincodeCol = $findColumn($normalizedHeaders, ['pin code', 'pincode', 'pin', 'postal code'], 13);
+            $phoneCol = $findColumn($normalizedHeaders, ['mobile no.', 'mobile no', 'mobile', 'mobile number', 'phone'], 14);
+            $altCol = $findColumn($normalizedHeaders, ['alternate numbers', 'alternate number', 'alternate no', 'alternate phone'], 15);
+            $whatsappCol = $findColumn($normalizedHeaders, ['whatsapp no.', 'whatsapp no', 'whatsapp', 'whatsapp number'], 16);
+            $emailCol = $findColumn($normalizedHeaders, ['email id', 'email', 'email address'], 17);
+            $qualificationCol = $findColumn($normalizedHeaders, ['qualification', 'education'], 18);
+            $experienceCol = $findColumn($normalizedHeaders, ['exprience', 'experience', 'work experience'], 19);
+            $shopAddressCol = $findColumn($normalizedHeaders, ["store's add.", "store's add", 'store add.', 'store add', 'store address', 'shop address'], 20);
+            $shopSizeCol = $findColumn($normalizedHeaders, ['shop size', 'store size'], 21);
+            $rentTypeCol = $findColumn($normalizedHeaders, ['own / rented', 'own/rented', 'own rented', 'rent type'], 22);
+            $monthlyRentCol = $findColumn($normalizedHeaders, ['monthly rent', 'rent'], 23);
+            $accountNoCol = $findColumn($normalizedHeaders, ['bank ac/no.', 'bank ac/no', 'bank account no.', 'bank account no', 'bank account number'], 24);
+            $bankNameCol = $findColumn($normalizedHeaders, ['bank name'], 25);
+            $branchCol = $findColumn($normalizedHeaders, ['branch name', 'branch'], 26);
+            $ifscCol = $findColumn($normalizedHeaders, ['ifsc code', 'ifsc'], 27);
+            $securityCol = $findColumn($normalizedHeaders, ['security deposit', 'security'], null);
+            $paymentStatusCol = $findColumn($normalizedHeaders, ['paid/unpaid', 'paid / unpaid', 'payment status'], null);
+            $paymentModeCol = $findColumn($normalizedHeaders, ['mode of payment', 'payment mode', 'mode'], null);
 
             foreach ($rows as $key => $row) {
-
                 $displayRow = $key + 1;
                 $sheetLabel = 'Sheet ' . ($sheetIndex + 1);
 
-                // Row 1 is the report title, row 2 is the header row
                 if ($key < 2) {
                     continue;
                 }
 
-                if (!isset($row[1]) || trim((string) $row[1]) == '') {
+                $hasData = false;
+
+                foreach ($row as $cell) {
+                    if (trim((string) $cell) !== '') {
+                        $hasData = true;
+                        break;
+                    }
+                }
+
+                if (!$hasData) {
                     continue;
                 }
 
                 try {
-
-
-                    // ========================
-                    //  EXTRACT DATA
-                    // ========================
+                    $sr = trim((string) ($row[$srCol] ?? ''));
+                    // $storeId = trim((string) ($row[$storeIdCol] ?? ''));
+                    $storeId = trim((string) ($row[$storeIdCol] ?? ''));
                     $name = trim((string) ($row[$nameCol] ?? ''));
                     $gender = trim((string) ($row[$genderCol] ?? ''));
                     $father = trim((string) ($row[$fatherCol] ?? ''));
+
                     $dobValue = $row[$dobCol] ?? '';
-                    $dob = trim((string) $dobValue);
+                    $dob = '';
 
                     if ($dobValue !== null && $dobValue !== '') {
                         try {
                             if (is_numeric($dobValue)) {
-                                $dob = Carbon::instance(ExcelDate::excelToDateTimeObject($dobValue))->format('Y-m-d');
+                                $dob = Carbon::instance(
+                                    ExcelDate::excelToDateTimeObject($dobValue)
+                                )->format('Y-m-d');
                             } else {
                                 $dob = Carbon::parse($dobValue)->format('Y-m-d');
                             }
                         } catch (\Exception $e) {
-                            // Keep the original value if parsing fails.
+                            $dob = trim((string) $dobValue);
                         }
                     }
+
                     $age = trim((string) ($row[$ageCol] ?? ''));
                     $aadhaar = trim((string) ($row[$aadhaarCol] ?? ''));
                     $pan = trim((string) ($row[$panCol] ?? ''));
                     $address = trim((string) ($row[$addressCol] ?? ''));
-
                     $gram = trim((string) ($row[$gramCol] ?? ''));
                     $subName = trim((string) ($row[$subCol] ?? ''));
                     $districtName = $districtCol !== null ? trim((string) ($row[$districtCol] ?? '')) : '';
                     $stateName = $stateCol !== null ? trim((string) ($row[$stateCol] ?? '')) : '';
-
                     $pincode = trim((string) ($row[$pincodeCol] ?? ''));
                     $phone = trim((string) ($row[$phoneCol] ?? ''));
                     $alt = trim((string) ($row[$altCol] ?? ''));
                     $whatsapp = trim((string) ($row[$whatsappCol] ?? ''));
                     $email = trim((string) ($row[$emailCol] ?? ''));
-
                     $qualification = trim((string) ($row[$qualificationCol] ?? ''));
                     $experience = trim((string) ($row[$experienceCol] ?? ''));
-
-                    // SHOP
-                    $shop_address = trim((string) ($row[$shopAddressCol] ?? ''));
-                    $shop_size = trim((string) ($row[$shopSizeCol] ?? ''));
-                    $rent_type = trim((string) ($row[$rentTypeCol] ?? ''));
-                    $monthly_rent = trim((string) ($row[$monthlyRentCol] ?? ''));
-
-                    $account_no = trim((string) ($row[$accountNoCol] ?? ''));
-                    $bank_name = trim((string) ($row[$bankNameCol] ?? ''));
+                    $shopAddress = trim((string) ($row[$shopAddressCol] ?? ''));
+                    $shopSize = trim((string) ($row[$shopSizeCol] ?? ''));
+                    $rentType = trim((string) ($row[$rentTypeCol] ?? ''));
+                    $monthlyRent = trim((string) ($row[$monthlyRentCol] ?? ''));
+                    $accountNo = trim((string) ($row[$accountNoCol] ?? ''));
+                    $bankName = trim((string) ($row[$bankNameCol] ?? ''));
                     $branch = trim((string) ($row[$branchCol] ?? ''));
                     $ifsc = trim((string) ($row[$ifscCol] ?? ''));
+                    $security = $securityCol !== null ? trim((string) ($row[$securityCol] ?? '')) : '';
+                    $paymentStatus = $paymentStatusCol !== null ? trim((string) ($row[$paymentStatusCol] ?? '')) : '';
+                    $paymentMode = $paymentModeCol !== null ? trim((string) ($row[$paymentModeCol] ?? '')) : '';
 
-                    $security = trim((string) ($row[$securityCol] ?? ''));
-                    $payment_status = trim((string) ($row[$paymentStatusCol] ?? ''));
-                    $payment_mode = trim((string) ($row[$paymentModeCol] ?? ''));
+                    $districtName = $districtName ?: 'Bilaspur';
+                    $stateName = $stateName ?: 'Chhattisgarh';
 
-                    if ($subName === '' && $sheetTitle !== '' && strtolower($sheetTitle) !== 'details for udyam registration') {
-                        $subName = $sheetTitle;
-                    }
+                    // if ($storeId === '') {
+                    //     $skipped++;
+                    //     $skipReasons[] = "$sheetLabel Row $displayRow: Store ID is missing";
+                    //     continue;
+                    // }
 
-                    if ($districtName === '') {
-                        $districtName = 'Bilaspur';
-                    }
-
-                    if ($stateName === '') {
-                        $stateName = 'Chhattisgarh';
-                    }
-
-                    // ========================
-                    // BASIC VALIDATION
-                    // ========================
-                    if ($name == '') {
+                    if ($name === '') {
                         $skipped++;
-                        $skipReasons[] = "$sheetLabel Row $displayRow: Missing required field(s): name";
+                        $skipReasons[] = "$sheetLabel Row $displayRow: Name is missing";
                         continue;
                     }
 
-                    if ($aadhaar == '') {
+                    // if (Shop::where('shop_id', $storeId)->exists()) {
+                    //     $skipped++;
+                    //     $skipReasons[] = "$sheetLabel Row $displayRow: Store ID '$storeId' already exists";
+                    //     continue;
+                    // }
+
+                    if ($aadhaar === '') {
                         $aadhaar = 'MISSING-' . ($sheetIndex + 1) . '-' . $displayRow . '-' . time();
                     }
 
-                    // ========================
-                    // LOCATION MAPPING
-                    // ========================
-                    // $state = State::where('name', 'LIKE', "%$stateName%")->first();
-                    // if (!$state) {
-                    //     $skipped++;
-                    //     continue;
-                    // }
+                    $state = State::where('name', 'LIKE', '%' . $stateName . '%')->first();
 
-                    // $district = City::where('name', 'LIKE', "%$districtName%")
-                    //     ->where('state_id', $state->id)
-                    //     ->first();
-
-                    // if (!$district) {
-                    //     $skipped++;
-                    //     continue;
-                    // }
-
-                    // // Janpat → SubDistrict
-                    // $sub = SubDistrict::where('name', 'LIKE', "%$subName%")->first();
-                    // if (!$sub) {
-                    //     $skipped++;
-                    //     continue;
-                    // }
-
-                    // $block = Block::where('id', $sub->block_id)->first();
-
-                    $state = null;
-
-                    if ($stateName !== '') {
-                        $state = State::where('name', 'LIKE', "%$stateName%")->first();
+                    if (!$state) {
+                        $state = State::where('name', 'LIKE', '%Chhattisgarh%')->first();
                     }
 
                     if (!$state) {
-                        $stateName = 'Chhattisgarh';
-                        $state = State::where('name', 'LIKE', '%Chhattisgarh%')->first()
-                            ?? State::where('name', 'LIKE', '%Chhatisgarh%')->first();
+                        $state = State::where('name', 'LIKE', '%Chhatisgarh%')->first();
                     }
 
                     if (!$state) {
                         $skipped++;
-                        $skipReasons[] = "$sheetLabel Row $displayRow: Default state 'Chhattisgarh' not found";
+                        $skipReasons[] = "$sheetLabel Row $displayRow: State '$stateName' not found";
                         continue;
                     }
 
                     $district = null;
+                    $normalizedDistrict = $normalize($districtName);
+                    $districts = City::where('state_id', $state->id)->get();
 
-                    if ($districtName !== '') {
-                        $district = City::where('name', 'LIKE', "%$districtName%")
-                            ->where('state_id', $state->id)
-                            ->first();
+                    foreach ($districts as $city) {
+                        if ($normalize($city->name) === $normalizedDistrict) {
+                            $district = $city;
+                            break;
+                        }
                     }
 
-                    if (!$district && $stateName !== '') {
-                        $district = City::where('name', 'LIKE', "%$stateName%")
+                    if (!$district) {
+                        $district = City::where('name', 'LIKE', '%' . $districtName . '%')
                             ->where('state_id', $state->id)
                             ->first();
                     }
 
                     if (!$district) {
-                        $districtName = 'Bilaspur';
                         $district = City::where('name', 'LIKE', '%Bilaspur%')
                             ->where('state_id', $state->id)
                             ->first();
@@ -1709,14 +1733,40 @@ class SellerController extends Controller
 
                     if (!$district) {
                         $skipped++;
-                        $skipReasons[] = "$sheetLabel Row $displayRow: Default district 'Bilaspur' not found";
+                        $skipReasons[] = "$sheetLabel Row $displayRow: District '$districtName' not found";
                         continue;
                     }
 
-                    // ✅ Janpat
-                    $sub = SubDistrict::where('name', 'LIKE', "%$subName%")
-                        ->where('district_id', $district->id)
-                        ->first();
+                    if ($subName === '') {
+                        $skipped++;
+                        $skipReasons[] = "$sheetLabel Row $displayRow: Janpat Panchayat is missing";
+                        continue;
+                    }
+
+                    $sub = null;
+                    $normalizedSubName = $normalize($subName);
+                    $subDistricts = SubDistrict::where('district_id', $district->id)->get();
+
+                    foreach ($subDistricts as $subDistrict) {
+                        if ($normalize($subDistrict->name) === $normalizedSubName) {
+                            $sub = $subDistrict;
+                            break;
+                        }
+                    }
+
+                    if (!$sub) {
+                        $sub = SubDistrict::where('name', 'LIKE', '%' . $subName . '%')
+                            ->where('district_id', $district->id)
+                            ->first();
+                    }
+
+                    if (!$sub) {
+                        $sub = SubDistrict::where('name', 'LIKE', '%' . $subName . '%')->first();
+
+                        if ($sub && (int) $sub->district_id !== (int) $district->id) {
+                            $sub = null;
+                        }
+                    }
 
                     if (!$sub) {
                         $skipped++;
@@ -1724,37 +1774,22 @@ class SellerController extends Controller
                         continue;
                     }
 
-                    // ✅ Block from sub
                     $block = Block::where('id', $sub->block_id)->first();
 
-                    if (!$block || (int) $block->district_id !== (int) $district->id) {
+                    if (!$block) {
                         $skipped++;
-                        $skipReasons[] = "$sheetLabel Row $displayRow: Block not found for Janpat '$subName' in district '{$district->name}'";
+                        $skipReasons[] = "$sheetLabel Row $displayRow: Block not found for Janpat '$subName'";
                         continue;
                     }
 
-                    // ========================
-                    // 👤 CREATE USER
-                    // ========================
-                    $user = new User;
+                    if ((int) $block->district_id !== (int) $district->id) {
+                        $skipped++;
+                        $skipReasons[] = "$sheetLabel Row $displayRow: Block '{$block->name}' does not belong to district '{$district->name}'";
+                        continue;
+                    }
 
-                    $user->name = $name;
-                    $user->gender = $gender;
-                    $user->father_husband_name = $father;
-                    $user->dob = $dob;
-                    $user->age = $age;
-
-                    $user->aadhaar = $aadhaar;
-                    $user->phone = $phone ?: $aadhaar;
-                    $user->pan = $pan;
-
-                    $user->address = $address;
-                    $user->city = $gram;
-                    $user->postal_code = $pincode;
-                    $user->alternate_phone = $alt;
-                    $user->whatsapp_number = $whatsapp;
                     $generatedEmail = strtolower(preg_replace('/\s+/', '', $name)) . rand(100, 999) . '@gmail.com';
-                    $candidateEmail = $email !== '' ? strtolower($email) : $generatedEmail;
+                    $candidateEmail = $email !== '' ? strtolower(trim($email)) : $generatedEmail;
 
                     if (User::where('email', $candidateEmail)->exists()) {
                         $candidateEmail = strtolower(preg_replace('/\s+/', '', $name)) . $aadhaar . '@iyouth.local';
@@ -1766,51 +1801,76 @@ class SellerController extends Controller
                         continue;
                     }
 
-                    $user->email = $candidateEmail;
+                    DB::beginTransaction();
 
-                    $user->qualification = $qualification;
-                    $user->experience = $experience;
+                    try {
+                        $user = new User;
+                        $user->name = $name;
+                        $user->gender = $gender;
+                        $user->father_husband_name = $father;
+                        $user->dob = $dob;
+                        $user->age = $age;
+                        $user->aadhaar = $aadhaar;
+                        $user->phone = $phone ?: $aadhaar;
+                        $user->pan = $pan;
+                        $user->address = $address;
+                        $user->city = $gram;
+                        $user->postal_code = $pincode;
+                        $user->alternate_phone = $alt;
+                        $user->whatsapp_number = $whatsapp;
+                        $user->email = $candidateEmail;
+                        $user->qualification = $qualification;
+                        $user->experience = $experience;
+                        $user->state = $state->name;
+                        $user->district = $district->id;
+                        $user->block = $block->id;
+                        $user->sub_district = $sub->id;
+                        $user->password = Hash::make($user->phone);
+                        $user->user_type = 'seller';
+                        $user->email_verified_at = now();
+                        $user->save();
 
-                    $user->state = $state->name;
-                    $user->district = $district->id;
-                    $user->block = $block->id;
-                    $user->sub_district = $sub->id;
+                        if (Shop::where('shop_id', $storeId)->exists()) {
+                            throw new \Exception("Store ID '$storeId' already exists");
+                        }
 
-                    $user->password = Hash::make($user->phone);
-                    $user->user_type = "seller";
+                        $shop = new Shop;
+                        $shop->user_id = $user->id;
+                        $shop->name = $name . "'s Shop";
 
-                    $user->email_verified_at = now();
-                    $user->save();
+                        $storeId = $this->generateLocationUniqueId(
+                            $district->id,
+                            $block->id,
+                            $sub->id
+                        );
 
-                    // ========================
-                    // 🏪 CREATE SHOP
-                    // ========================
-                    $shop = new Shop;
+                        if (!$storeId) {
+                            throw new \Exception("Shop ID generate nahi ho payi");
+                        }
 
-                    $shop->user_id = $user->id;
-                    $shop->name = $name . "'s Shop";
+                        $shop->shop_id = $storeId;
+                        $shop->address = $shopAddress;
+                        $shop->shop_size = $shopSize;
+                        $shop->rent_type = $rentType;
+                        $shop->monthly_rent = $monthlyRent;
+                        $shop->bank_acc_no = $accountNo;
+                        $shop->bank_name = $bankName;
+                        $shop->bank_acc_name = $branch;
+                        $shop->bank_routing_no = $ifsc;
+                        $shop->security_deposit = $security;
+                        $shop->payment_status = $paymentStatus;
+                        $shop->payment_mode = $paymentMode;
+                        $shop->registration_approval = 1;
+                        $shop->verification_status = 1;
+                        $shop->shop_id = $storeId;
+                        $shop->save();
 
-                    $shop->address = $shop_address;
-                    $shop->shop_size = $shop_size;
-                    $shop->rent_type = $rent_type;
-                    $shop->monthly_rent = $monthly_rent;
-
-                    $shop->bank_acc_no = $account_no;
-                    $shop->bank_name = $bank_name;
-                    $shop->bank_acc_name = $branch;
-                    $shop->bank_routing_no = $ifsc;
-
-                    $shop->security_deposit = $security;
-                    $shop->payment_status = $payment_status;
-                    $shop->payment_mode = $payment_mode;
-
-                    $shop->registration_approval = 1;
-                    $shop->verification_status = 1;
-                    $shop->shop_id = $this->generateLocationUniqueId($district->id, $block->id, $sub->id);
-
-                    $shop->save();
-
-                    $success++;
+                        DB::commit();
+                        $success++;
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+                        throw $e;
+                    }
                 } catch (\Exception $e) {
                     $skipped++;
                     $skipReasons[] = "$sheetLabel Row $displayRow error: " . $e->getMessage();
@@ -1823,6 +1883,7 @@ class SellerController extends Controller
         }
 
         flash("$success imported, $skipped skipped")->success();
+
         return back();
     }
 
