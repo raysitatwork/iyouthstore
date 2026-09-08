@@ -139,6 +139,8 @@
     </div>
 </div>
 
+
+
 <!--show only in home page-->
 @if (request()->routeIs('home') or request()->routeIs('cart'))
     <div class="p-2">

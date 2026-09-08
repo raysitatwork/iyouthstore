@@ -60,6 +60,8 @@
         <div class="row">
             <div class="col-lg-6 col">
                 <ul class="list-inline d-flex justify-content-between justify-content-lg-start mb-0">
+
+                    Total Visitors: {{ \App\Models\Visitor::count() }}
                     <!-- Language switcher -->
                     @if (get_setting('show_language_switcher') == 'on')
                         <li class="list-inline-item dropdown mr-4 lang-visibility" id="lang-change">

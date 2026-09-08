@@ -334,6 +334,7 @@
 
     {{-- Coming Soon --}}
     @include('frontend.megamart.partials.comming_soon');
+    @include('frontend.megamart.partials.sellers');
 
 
     <!-- Featured Products -->

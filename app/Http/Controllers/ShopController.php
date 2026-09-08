@@ -166,8 +166,26 @@ class ShopController extends Controller
 
             $blockName = Block::where('id', $blockId)->value('name');
 
+<<<<<<< Updated upstream
             if (!$blockName) {
                 throw new \Exception('Block not found.');
+=======
+            $prefix = $districtCode . '-' . $blockName;
+
+            $lastShop = Shop::where('shop_id', 'like', $prefix . '-%')
+                ->lockForUpdate()
+                ->orderBy('id', 'desc')
+                ->first();
+
+            if ($lastShop) {
+                $lastNumber = (int) substr(
+                    $lastShop->shop_id,
+                    strrpos($lastShop->shop_id, '-') + 1
+                );
+                $newNumber = $lastNumber + 1;
+            } else {
+                $newNumber = 1;
+>>>>>>> Stashed changes
             }
 
             $blockName = strtoupper(trim($blockName));

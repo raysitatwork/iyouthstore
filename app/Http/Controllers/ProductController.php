@@ -254,8 +254,7 @@ class ProductController extends Controller
 
     public function assign()
     {
-
-        $shops = Shop::with('user')->get();
+               $shops = Shop::with('user')->where('registration_approval',1)->where('verification_status',1)->get();
 
         $products = Product::where('added_by', 'admin')->where('auction_product', 0)->where('wholesale_product', 0)->where('digital', 0)->orderBy('created_at', 'desc')->get();
 
@@ -285,11 +284,6 @@ class ProductController extends Controller
                     $failedProducts[] = $item['product_id'];
                     continue;
                 }
-
-                // if ($product->current_stock < $item['quantity']) {
-                //     $failedProducts[] = $item['product_id'];
-                //     continue;
-                // }
 
                 $product->decrement('current_stock', $item['quantity']);
 

@@ -57,10 +57,16 @@ class HomeController extends Controller
             return Category::with('bannerImage')->where('featured', 1)->get();
         });
 
+<<<<<<< Updated upstream
         //change
+=======
+           $shops = Shop::whereIn('user_id', verified_sellers_id())
+            ->paginate(8);
+
+>>>>>>> Stashed changes
         $coming_soon_products = Product::where('coming_soon', 1)->orderBy('id', 'desc')->get();
 
-        return view('frontend.' . get_setting('homepage_select') . '.index', compact('featured_categories', 'lang', 'coming_soon_products'));
+        return view('frontend.' . get_setting('homepage_select') . '.index', compact('featured_categories', 'lang', 'coming_soon_products','shops'));
     }
 
     function calculateDistance($lat1, $lon1, $lat2, $lon2)
