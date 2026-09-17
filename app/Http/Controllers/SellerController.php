@@ -400,7 +400,7 @@ class SellerController extends Controller
         $user           = new User;
 
         if ($request->hasFile('image')) {
-            $uploadPath = public_path('storage/uploads/users');
+            $uploadPath = public_path('uploads/users');
 
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0755, true);
@@ -458,11 +458,13 @@ class SellerController extends Controller
             $shop->payment_mode = $request->payment_mode;
             $shop->registration_approval = 1;
             // $shop->shop_id = $this->generateLocationUniqueId($request->district_id, $request->block_id, $request->sub_district_id);
-            $shop->shop_id = $this->generateLocationUniqueId(
-                $request->district_id,
-                $request->block_id,
-                $request->sub_district_id
-            );
+            // $shop->shop_id = $this->generateLocationUniqueId(
+            //     $request->district_id,
+            //     $request->block_id,
+            //     $request->sub_district_id
+            // );
+
+            $shop->shop_id = $request->shop_id;
             $shop->save();
 
             // try {
@@ -546,42 +548,6 @@ class SellerController extends Controller
             return "IYS/{$districtCode}/{$blockName}/{$serialNumber}";
         });
     }
-
-    // Old code
-    // function generateLocationUniqueId($districtId, $blockId, $subDistrictId)
-    // {
-    //     return DB::transaction(function () use ($districtId, $blockId, $subDistrictId) {
-
-    //         $district = City::find($districtId);
-    //         if (!$district) {
-    //             return null;
-    //         }
-
-    //         $districtCode = $district->district_code;
-
-    //         $blockName = Block::where('id', $blockId)->value('name');
-    //         $subDistrictName = SubDistrict::where('id', $subDistrictId)->value('name');
-
-    //         $prefix = $districtCode . '-' . $blockName . '-' . $subDistrictName;
-
-    //         $lastShop = Shop::where('shop_id', 'like', $prefix . '-%')
-    //             ->lockForUpdate()
-    //             ->orderBy('id', 'desc')
-    //             ->first();
-
-    //         if ($lastShop) {
-    //             $lastNumber = (int) substr(
-    //                 $lastShop->shop_id,
-    //                 strrpos($lastShop->shop_id, '-') + 1
-    //             );
-    //             $newNumber = $lastNumber + 1;
-    //         } else {
-    //             $newNumber = 1;
-    //         }
-
-    //         return $prefix . '-' . $newNumber;
-    //     });
-    // }
 
     /**
      * Display the specified resource.
@@ -691,14 +657,14 @@ class SellerController extends Controller
 
         if ($request->hasFile('image')) {
             if ($user->image) {
-                $oldImage = public_path('storage/' . $user->image);
+                $oldImage = public_path($user->image);
 
                 if (file_exists($oldImage)) {
                     unlink($oldImage);
                 }
             }
 
-            $uploadPath = public_path('storage/uploads/users');
+            $uploadPath = public_path('uploads/users');
 
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0755, true);
@@ -754,6 +720,7 @@ class SellerController extends Controller
 
         // Generate / Update Shop ID
         // $shop->shop_id = $this->generateLocationUniqueId($request->district_id, $request->block_id);
+        $shop->shop_id = $request->shop_id;
 
         $user->save();
         $shop->save();

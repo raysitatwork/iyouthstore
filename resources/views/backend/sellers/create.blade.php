@@ -73,6 +73,20 @@
             @endif
         </div>
     </div>
+
+
+   <div class="col-md-6">
+                            <div class="form-group">
+                                <label>{{ translate('Shop ID') }}</label>
+                                <input type="text"  class="form-control" name="shop_id">
+                              
+                                @if ($errors->has('shop_id'))
+                                    <span class="invalid-feedback d-block">
+                                        <strong>{{ $errors->first('shop_id') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
 </div>
 
 

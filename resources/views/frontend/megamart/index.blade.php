@@ -63,7 +63,7 @@
                                     <a class="d-block" href="{{ route('products.category', $category->slug) }}">
                                         <img src="{{ isset($category->bannerImage->file_name) ? my_asset($category->bannerImage->file_name) : static_asset('assets/img/placeholder.jpg') }}"
                                             class="lazyload img-fit h-100 mx-auto has-transition"
-                                            alt="{{ $category->getTranslation('name') }}"
+                                            alt="{{ $category->getTranslation('name') }}" loading="lazy"
                                             onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                                     </a>
                                 </div>
@@ -318,10 +318,6 @@
             </div>
         </div>
     </div>
-
-
-
-@include('frontend.megamart.partials.customer_note');
 
 
     <!-- Today's deal -->

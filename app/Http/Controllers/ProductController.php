@@ -880,7 +880,8 @@ class ProductController extends Controller
                 'users.id as seller_id',
                 'users.name as seller_name',
                 'shops.shop_id'
-            );
+            )->where('shops.verification_status',1)
+            ->where('shops.registration_approval',1);
 
         // if ($request->search) {
         //     $query->where('users.name', 'like', '%' . $request->search . '%')

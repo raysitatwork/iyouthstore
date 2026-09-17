@@ -504,6 +504,8 @@ Route::controller(BlogController::class)->group(function () {
 
 });
 
+// Route::get('/our-stores', [HomeController::class, 'all_stores'])->name('all_stores');
+
 Route::get('/search-gram-panchayat', [HomeController::class, 'searchGramPanchayat'])->name('search-gram-panchayat');
 
 Route::controller(PageController::class)->group(function () {

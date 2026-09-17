@@ -8,7 +8,7 @@
             <section class="pt-4 mb-3">
                 <div class="row">
                     <div class="col-lg-6 text-center text-lg-left">
-                        <h1 class="fw-700 fs-20 fs-md-24 text-dark">{{ translate('All Sellers') }}</h1>
+                        <h1 class="fw-700 fs-20 fs-md-24 text-dark">{{ translate('Our Stores') }}</h1>
                     </div>
                     <div class="col-lg-6">
                         <ul class="breadcrumb bg-transparent p-0 justify-content-center justify-content-lg-end">
@@ -25,20 +25,23 @@
             <!-- All Sellers -->
             <section class="mb-3 pb-3">
                 <div class="bg-white px-3">
-                    <div class="row row-cols-xl-5 row-cols-md-3 row-cols-sm-2 row-cols-1 gutters-16 border-top border-left">
+                    <div class="row row-cols-xl-4 row-cols-md-4 row-cols-sm-2 row-cols-1 gutters-16 border-top border-left">
                         @foreach ($shops as $key => $shop)
                             @if ($shop->user != null)
                                 <div class="col text-center border-right border-bottom has-transition hov-shadow-out z-1">
                                     <div class="position-relative px-3" style="padding-top: 2rem; padding-bottom:2rem;">
                                         <!-- Shop logo & Verification Status -->
-                                        <div class="position-relative mx-auto size-100px size-md-120px">
-                                            <a href="{{ route('shop.visit', $shop->slug) }}" class="d-flex mx-auto justify-content-center align-item-center size-100px size-md-120px border overflow-hidden hov-scale-img" tabindex="0" style="border: 1px solid #e5e5e5; border-radius: 50%; box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.06);">
-                                                <img src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
-                                                    data-src="{{ uploaded_asset($shop->logo) }}"
-                                                    alt="{{ $shop->name }}"
-                                                    class="img-fit lazyload has-transition"
-                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder-rect.jpg') }}';">
-                                            </a>
+                                        <div class="position-relative mx-auto size-200px size-md-200px">
+                                         
+                                         
+<img src="{{ static_asset('assets/img/placeholder.jpg') }}"
+     data-src="{{ static_asset($shop->user->image) }}"
+     alt="{{ $shop->name }}" height="200px" width="200px"
+     class="img-fit lazyload has-transition"
+     onerror="this.onerror=null;this.src='https://iyouthstore.in/public/uploads/all/kU21GQWrj8hG548noAvBhwxgJTAx7uRwMdVE3BxI.webp';">
+                                                    
+                                                    
+                                           
                                             <div class="absolute-top-right z-1 mr-md-2 mt-1 rounded-content bg-white">
                                                 @if ($shop->verification_status == 1)
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24.001" height="24" viewBox="0 0 24.001 24">
@@ -62,22 +65,15 @@
                                             </div>
                                         </div>
                                         <!-- Shop name -->
-                                        <h2 class="fs-14 fw-700 text-dark text-truncate-2 h-40px mt-4 mb-3">
-                                            <a href="{{ route('shop.visit', $shop->slug) }}" class="text-reset hov-text-primary" tabindex="0">{{ $shop->name }}</a>
+                                        <h2 class="fs-14 fw-700 text-dark text-truncate-2 mt-3">
+                                 {{ $shop->name }}
                                         </h2>
-                                        <!-- Shop Rating -->
-                                        <div class="rating rating-mr-2 text-dark mb-3">
-                                            {{ renderStarRating($shop->rating) }}
-                                            <span class="opacity-60 fs-14">({{ $shop->num_of_reviews }}
-                                                {{ translate('Reviews') }})</span>
-                                        </div>
-                                        <!-- Visit Button -->
-                                        <a href="{{ route('shop.visit', $shop->slug) }}" class="btn-visit">
-                                            <span class="circle" aria-hidden="true">
-                                                <span class="icon arrow"></span>
-                                            </span>
-                                            <span class="button-text">{{ translate('Visit Store') }}</span>
-                                        </a>
+                                        
+                                        <p>Address - {{$shop->address}}, Bilaspur District</p>
+                                        
+                                        
+                                     
+                                    
                                     </div>
                                 </div>
                             @endif
@@ -88,9 +84,16 @@
                         {{ $shops->links() }}
                     </div>
                 </div>
+                
+                
+              
             </section>
         </div>
     </div>
+    
+      <div class="container-fluid row">
+                   <iframe class="col-lg-12" src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d945449.0907543172!2d81.59415193659616!3d22.233987945399914!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1siyouth%20store!5e0!3m2!1sen!2sin!4v1788770093214!5m2!1sen!2sin"  height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                </div>
 
 @endsection
 

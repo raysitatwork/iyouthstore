@@ -89,42 +89,6 @@ class ShopController extends Controller
         return response()->json($cities);
     }
 
-
-    // function generateLocationUniqueId($districtId, $blockId, $subDistrictId)
-    // {
-    //     return DB::transaction(function () use ($districtId, $blockId, $subDistrictId) {
-
-    //         $district = City::find($districtId);
-    //         if (!$district) {
-    //             return null;
-    //         }
-
-    //         $districtCode = $district->district_code;
-
-    //         $blockName = Block::where('id', $blockId)->value('name');
-    //         $subDistrictName = SubDistrict::where('id', $subDistrictId)->value('name');
-
-    //         $prefix = $districtCode . '-' . $blockName . '-' . $subDistrictName;
-
-    //         $lastShop = Shop::where('shop_id', 'like', $prefix . '-%')
-    //             ->lockForUpdate()
-    //             ->orderBy('id', 'desc')
-    //             ->first();
-
-    //         if ($lastShop) {
-    //             $lastNumber = (int) substr(
-    //                 $lastShop->shop_id,
-    //                 strrpos($lastShop->shop_id, '-') + 1
-    //             );
-    //             $newNumber = $lastNumber + 1;
-    //         } else {
-    //             $newNumber = 1;
-    //         }
-
-    //         return $prefix . '-' . $newNumber;
-    //     });
-    // }
-
     private function generateLocationUniqueId($districtId, $blockId, $subDistrictId)
     {
         return DB::transaction(function () use ($districtId, $blockId, $subDistrictId) {
@@ -166,10 +130,10 @@ class ShopController extends Controller
 
             $blockName = Block::where('id', $blockId)->value('name');
 
-<<<<<<< Updated upstream
+
             if (!$blockName) {
                 throw new \Exception('Block not found.');
-=======
+
             $prefix = $districtCode . '-' . $blockName;
 
             $lastShop = Shop::where('shop_id', 'like', $prefix . '-%')
@@ -185,7 +149,7 @@ class ShopController extends Controller
                 $newNumber = $lastNumber + 1;
             } else {
                 $newNumber = 1;
->>>>>>> Stashed changes
+
             }
 
             $blockName = strtoupper(trim($blockName));
@@ -284,7 +248,8 @@ class ShopController extends Controller
             // $district = City::where('name', $request->district)
             //     ->value('id');
 
-            $shop->shop_id = $this->generateLocationUniqueId($request->district, $request->block, $request->sub_district);
+            // $shop->shop_id = $this->generateLocationUniqueId($request->district, $request->block, $request->sub_district);
+            $shop->shop_id = null;
 
             $shop->slug = preg_replace('/\s+/', '-', str_replace("/", " ", $request->shop_name));
             $shop->save();

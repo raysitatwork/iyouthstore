@@ -1,16 +1,18 @@
 <html>
 
 <head>
-  <style type="text/css">
-  *{
-margin:0;
-padding:0;
-}
-      html, body {
-        overflow: hidden;
-      }
-      </style>
-      
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            overflow: hidden;
+        }
+    </style>
+
     <script src='https://www.google.com/recaptcha/api.js' async defer></script>
 </head>
 <form action='?' method='POST'>
@@ -19,30 +21,29 @@ padding:0;
 </form>
 <script>
     function captchaCallback(response) {
-        if ( Captcha != 'undefined') {
-          console.log(response);
+        if (Captcha != 'undefined') {
+            console.log(response);
             Captcha.postMessage(response);
-          Captcha1.postMessage("1235");
+            Captcha1.postMessage("1235");
         }
     }
-  
+
     function expiredCaptchaCallback(response) {
-      console.log("error");
-            Captcha.postMessage("");
-        
-    }
-  
-  
-  
- setInterval(captchaShow,2000);
- 
-  function captchaShow(){
-    var data =  document.querySelectorAll("[style*='visibility: visible; z-index: 2000000000;']");
-    
-   CaptchaShowValidation.postMessage(data.length==1);
+        console.log("error");
+        Captcha.postMessage("");
 
     }
 
+
+
+    setInterval(captchaShow, 2000);
+
+    function captchaShow() {
+        var data = document.querySelectorAll("[style*='visibility: visible; z-index: 2000000000;']");
+
+        CaptchaShowValidation.postMessage(data.length == 1);
+
+    }
 </script>
 </body>
 

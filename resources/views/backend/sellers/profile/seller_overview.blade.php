@@ -95,6 +95,39 @@
 
             <div class="p-3 fs-13">
 
+
+                {{-- vendor store address --}}
+                    <div class="border-bottom-dashed2 pb-2">
+
+                        <div class="font-weight-bold mb-1">
+                            {{ translate('Office Address') }}
+                        </div>
+                    
+                     <div class="d-flex py-2 border-bottom-dashed2">
+                            <div class="w-210px">{{ translate('State') }}</div>
+                        <div>{{ $shop->user->state ?? 'N/A' }}</div>
+                    </div>
+                    
+                    
+                     <div class="d-flex py-2 border-bottom-dashed2">
+                        <div class="w-210px">{{ translate('District') }}</div>
+                        <div>{{ $shop->user->district ?? 'N/A' }}</div>
+                    </div>
+                    
+                    
+                     <div class="d-flex py-2 border-bottom-dashed2">
+                        <div class="w-210px">{{ translate('Block') }}</div>
+                        <div>{{ $shop->user->block ?? 'N/A' }}</div>
+                    </div>
+                    
+                    
+                     <div class="d-flex py-2 border-bottom-dashed2">
+                        <div class="w-210px">{{ translate('City') }}</div>
+                        <div>{{ $shop->user->city ?? 'N/A' }}</div>
+                    </div>
+
+                    </div>
+
                 {{-- Default Address --}}
                 @if($default_shipping_address)
 

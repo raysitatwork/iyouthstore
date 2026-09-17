@@ -21,6 +21,7 @@ class SellerProductAssignmentExport implements FromCollection, WithMapping, With
             ->where('wholesale_product', 0)
             ->where('digital', 0)
             ->with('stocks')
+            ->with('main_category')
             ->orderBy('id', 'asc')
             ->get();
     }
@@ -35,6 +36,9 @@ class SellerProductAssignmentExport implements FromCollection, WithMapping, With
             'name',
             'current_stock',
             'assign_quantity',
+            'category',
+            'Amount',
+            'NLC',
         ];
     }
 
@@ -61,6 +65,10 @@ class SellerProductAssignmentExport implements FromCollection, WithMapping, With
             $product->id,
             $product->name,
             $currentStock,
+            '',
+            $product->main_category->name,
+            $product->unit_price,
+            $product->seller_price,
 
             // Seller quantity बाद में Excel में भरेगा
             '',
