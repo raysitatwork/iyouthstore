@@ -159,6 +159,8 @@
             <!-- Continue to Shipping -->
             <div class="mt-4">
                 
+            
+                @if($request->url() == 'checkout')
                 <a href="{{ route('checkout') }}" class="btn btn-primary btn-block fs-14 fw-700 rounded-0 px-4">
                     {{ translate('Proceed to Checkout')}} ({{ sprintf("%02d", count($carts)) }})
                 </a>

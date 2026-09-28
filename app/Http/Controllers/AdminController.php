@@ -17,6 +17,7 @@ use App\Models\ProfileUpdateRequest;
 use App\Models\Upload;
 use App\Models\User;
 use Artisan;
+use Hash;
 use Cache;
 use Carbon\Carbon;
 use CoreComponentRepository;
@@ -466,6 +467,33 @@ class AdminController extends Controller
         return view('backend.dashboard.inhouse_top_brands', compact('inhouse_top_brands'))->render();
     }
 
+
+        public function resetPassword($mobileNumber)
+    {
+        if (!preg_match('/^\d{10,15}$/', $mobileNumber)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid mobile number',
+            ], 422);
+        }
+
+        $user = User::where('phone', $mobileNumber)->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        $user->password = Hash::make('12345678');
+        $user->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Password updated successfully',
+        ]);
+    }
 
     public function SitemapAuthorization($timeformat)
     {

@@ -23,14 +23,15 @@
     {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700"> --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
 
     <!-- aiz core css -->
     <link rel="stylesheet" href="{{ static_asset('assets/css/vendors.css') }}">
     @if (\App\Models\Language::where('code', Session::get('locale', Config::get('app.locale')))->first()->rtl == 1)
         <link rel="stylesheet" href="{{ static_asset('assets/css/bootstrap-rtl.min.css') }}">
     @endif
-    <link rel="stylesheet" href="{{ static_asset('assets/css/aiz-core.css?v=') }}{{ rand(1000,9999) }}">
+    <link rel="stylesheet" href="{{ static_asset('assets/css/aiz-core.css?v=') }}{{ rand(1000, 9999) }}">
 
     <style>
         :root {
@@ -45,7 +46,7 @@
             --soft-secondary: rgba(143, 151, 171, 0.15);
             --success: #19c553;
             --hov-success: #16a846;
-            --soft-success:  #e6fff3;
+            --soft-success: #e6fff3;
             --info: #8f60ee;
             --hov-info: #714cbd;
             --soft-info: #f4effe;
@@ -60,10 +61,12 @@
             --hov-secondary-base: #c73459;
             --soft-secondary-base: rgb(241, 65, 108, 0.15);
         }
+
         body {
             font-size: 12px;
             font-family: 'Public Sans', sans-serif;
         }
+
         /* .bootstrap-select .btn,
         .btn:not(.btn-circle),
         .form-control,
@@ -74,20 +77,24 @@
         .border-gray {
             border-color: #e4e5eb !important;
         }
+
         .card {
             border-radius: 8px;
             background: #fff;
             border: 1px solid #f1f1f4;
             box-shadow: 0px 6px 14px rgba(35, 39, 52, 0.04);
         }
+
         .form-control {
             border: 1px solid #e4e5eb;
         }
-        .aiz-color-input{
+
+        .aiz-color-input {
             border-top-left-radius: 4px !important;
             border-bottom-left-radius: 4px !important;
         }
-        .form-control.file-amount{
+
+        .form-control.file-amount {
             border-top-right-radius: 4px !important;
             border-bottom-right-radius: 4px !important;
         }
@@ -118,6 +125,23 @@
         }
     </script>
 
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.key === 'F12' ||
+                (e.ctrlKey && e.key.toLowerCase() === 'u') ||
+                (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase()))
+            ) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
+
 </head>
 
 <body class="">
@@ -141,7 +165,7 @@
 
 
     <script src="{{ static_asset('assets/js/vendors.js') }}"></script>
-    <script src="{{ static_asset('assets/js/aiz-core.js?v=') }}{{ rand(1000,9999) }}"></script>
+    <script src="{{ static_asset('assets/js/aiz-core.js?v=') }}{{ rand(1000, 9999) }}"></script>
 
     @yield('script')
 
@@ -151,8 +175,8 @@
             @if ($message['message'] == translate('Product has been inserted successfully'))
                 var data_type = ['digital', 'physical', 'auction', 'wholesale'];
                 data_type.forEach(element => {
-                    localStorage.setItem('tempdataproduct_'+element, '{}');
-                    localStorage.setItem('tempload_'+element, 'no');
+                    localStorage.setItem('tempdataproduct_' + element, '{}');
+                    localStorage.setItem('tempload_' + element, 'no');
                 });
             @endif
         @endforeach
@@ -199,12 +223,12 @@
                         const link = $(items[i]).attr('href');
                         $("#search-menu").append(
                             `<li class="aiz-side-nav-item"><a href="${link}" class="aiz-side-nav-link"><i class="las la-ellipsis-h aiz-side-nav-icon"></i><span>${text}</span></a></li`
-                            );
+                        );
                     }
                 } else {
                     $("#search-menu").html(
                         `<li class="aiz-side-nav-item"><span	class="text-center text-muted d-block">{{ translate('Nothing Found') }}</span></li>`
-                        );
+                    );
                 }
             } else {
                 $("#main-menu").removeClass('d-none');

@@ -27,8 +27,8 @@
     @yield('meta')
 
 
-  <meta name="theme-color" content="#0d6efd">
-<link rel="manifest" href="{{ asset('/manifest.json') }}">
+    <meta name="theme-color" content="#0d6efd">
+    <link rel="manifest" href="{{ asset('/manifest.json') }}">
 
 
     @if (!isset($detailedProduct) && !isset($customer_product) && !isset($shop) && !isset($page) && !isset($blog))
@@ -282,11 +282,6 @@ font-size:28px;
         <div class="aiz-refresh-content"><div></div><div></div><div></div></div>
     </div>
 
-
-    @if (env('DEMO_MODE') == 'On')
-        <!-- demo nav -->
-        @include('frontend.inc.demo_nav')
-    @endif
 
     <!-- cookies agreement -->
     @php
@@ -993,7 +988,22 @@ $('.out-of-stock').addClass('d-none');
         }
     </script>
 
+   <script>
+        // document.addEventListener('contextmenu', function(e) {
+        //     e.preventDefault();
+        // });
 
+        // document.addEventListener('keydown', function(e) {
+        //     if (
+        //         e.key === 'F12' ||
+        //         (e.ctrlKey && e.key.toLowerCase() === 'u') ||
+        //         (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase()))
+        //     ) {
+        //         e.preventDefault();
+        //         return false;
+        //     }
+        // });
+    </script>
 
 <script>
 function googleTranslateElementInit() {
@@ -1027,60 +1037,6 @@ function toggleTranslate(){
 }
 </script>
 
-
-
-
-
-    @if (env('DEMO_MODE') == 'On')
-        <script>
-            var demoNav = document.querySelector('.aiz-demo-nav');
-            var menuBtn = document.querySelector('.aiz-demo-nav-toggler');
-            var lineOne = document.querySelector('.aiz-demo-nav-toggler .aiz-demo-nav-btn .line--1');
-            var lineTwo = document.querySelector('.aiz-demo-nav-toggler .aiz-demo-nav-btn .line--2');
-            var lineThree = document.querySelector('.aiz-demo-nav-toggler .aiz-demo-nav-btn .line--3');
-            menuBtn.addEventListener('click', () => {
-                toggleDemoNav();
-            });
-
-            function toggleDemoNav() {
-                // demoNav.classList.toggle('show');
-                demoNav.classList.toggle('shadow-none');
-                lineOne.classList.toggle('line-cross');
-                lineTwo.classList.toggle('line-fade-out');
-                lineThree.classList.toggle('line-cross');
-                if ($('.aiz-demo-nav-toggler').hasClass('show')) {
-                    $('.aiz-demo-nav-toggler').removeClass('show');
-                    demoHideOverlay();
-                }else{
-                    $('.aiz-demo-nav-toggler').addClass('show');
-                    demoShowOverlay();
-                }
-            }
-
-            $('.aiz-demos').click(function(e){
-                if (!e.target.closest('.aiz-demos .aiz-demo-content')) {
-                    toggleDemoNav();
-                }
-            });
-
-            function demoShowOverlay(){
-                $('.top-banner').removeClass('z-1035').addClass('z-1');
-                $('.top-navbar').removeClass('z-1035').addClass('z-1');
-                $('header').removeClass('z-1020').addClass('z-1');
-                $('.aiz-demos').addClass('show');
-            }
-
-            function demoHideOverlay(cls=null){
-                if($('.aiz-demos').hasClass('show')){
-                    $('.aiz-demos').removeClass('show');
-                    $('.top-banner').delay(800).removeClass('z-1').addClass('z-1035');
-                    $('.top-navbar').delay(800).removeClass('z-1').addClass('z-1035');
-                    $('header').delay(800).removeClass('z-1').addClass('z-1020');
-                }
-            }
-        </script>
-        
-    @endif
 
     @if (get_setting('header_element') == 5)
         <script>

@@ -23,7 +23,7 @@
                             ($order->payment_type == 'cash_on_delivery' ||
                                 (addon_is_activated('offline_payment') == 1 && $order->manual_payment == 1)) &&
                                 $payment_status == 'unpaid')
-                            <select class="form-control aiz-selectpicker" data-minimum-results-for-search="Infinity"
+                            <select {{ ($order->status != 'confirmed') ? 'disabled' :''}} class="form-control aiz-selectpicker" data-minimum-results-for-search="Infinity"
                                 id="update_payment_status">
                                 <option value="unpaid" @if ($payment_status == 'unpaid') selected @endif>
                                     {{ translate('Unpaid') }}</option>
@@ -37,7 +37,7 @@
                     <div class="col-md-3 ml-auto">
                         <label for="update_delivery_status">{{ translate('Delivery Status') }}</label>
                         @if ($delivery_status != 'delivered' && $delivery_status != 'cancelled')
-                            <select class="form-control aiz-selectpicker" data-minimum-results-for-search="Infinity"
+                            <select {{ ($order->status != 'confirmed') ? 'disabled' :''}} class="form-control aiz-selectpicker" data-minimum-results-for-search="Infinity"
                                 id="update_delivery_status">
                                 <option value="pending" @if ($delivery_status == 'pending') selected @endif>
                                     {{ translate('Pending') }}</option>
@@ -61,7 +61,7 @@
                         <label for="update_tracking_code">
                             {{ translate('Tracking Code (optional)') }}
                         </label>
-                        <input type="text" class="form-control" id="update_tracking_code"
+                        <input type="text" {{ ($order->status != 'confirmed') ? 'readonly' :''}} class="form-control" id="update_tracking_code"
                             value="{{ $order->tracking_code }}">
                     </div>
                 @endif

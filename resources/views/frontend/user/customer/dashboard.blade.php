@@ -102,8 +102,8 @@
     <div class="row gutters-16 mt-2">
 
         <!-- count summary -->
-        <div class="col-xl-4 col-md-6 mb-4">
-            <div class="px-4 bg-white border h-100">
+        <div class="col-xl-12 col-md-6 mb-4">
+            <div class="px-4 bg-white border h-100 d-flex flex-column flex-lg-row justify-content-between">
                 <!-- Cart summary -->
                 <div class="d-flex align-items-center py-4 border-bottom">
                     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
@@ -195,7 +195,7 @@
         @endif
 
         <!-- Default Shipping Address -->
-        <div class="col-xl-4 col-md-6 mb-4">
+        {{-- <div class="col-xl-4 col-md-6 mb-4">
             <div class="p-4 border h-100">
                 <h6 class="fw-700 mb-3 text-dark">{{ translate('Default Shipping Address') }}</h6>
                 @if(Auth::user()->addresses != null)
@@ -217,7 +217,7 @@
                     {{ translate('Add New Address') }}
                 </button>
             </div>
-        </div>
+        </div> --}}
 
     </div>
 
@@ -308,4 +308,15 @@
     @if (get_setting('google_map') == 1)
         @include('frontend.partials.google_map')
     @endif
+
+    <script type="text/javascript">
+        function removeFromWishlist(id){
+            $.post('{{ route('wishlists.remove') }}',{_token:'{{ csrf_token() }}', id:id}, function(data){
+                $('#wishlist').html(data);
+                $('#wishlist_'+id).hide();
+                AIZ.plugins.notify('success', '{{ translate("Item has been renoved from wishlist") }}');
+            })
+        }
+    </script>
 @endsection
+

@@ -470,7 +470,7 @@
                             <!-- Image -->
                             <span class="size-40px rounded-circle overflow-hidden border border-transparent nav-user-img">
                                 @if ($user->avatar_original != null)
-                                    <img src="{{ uploaded_asset(Auth::user()->avatar_original) }}" class="img-fit h-100"
+                                    <img src="{{ asset('public/'. $user->avatar_original) }}" class="img-fit h-100"
                                         alt="{{ translate('avatar') }}"
                                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
                                 @else

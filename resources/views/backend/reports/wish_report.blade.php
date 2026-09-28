@@ -63,10 +63,11 @@
 
                         <thead>
                             <tr>
+                                <th>No</th>
                                 <th width="25%">{{ translate('Product') }}</th>
                                 <th width="20%">{{ translate('Customer') }}</th>
                                 <th width="25%">{{ translate('Location') }}</th>
-                                <th width="10%">{{ translate('Qty') }}</th>
+                                {{-- <th width="10%">{{ translate('Qty') }}</th> --}}
                                 <th width="20%">{{ translate('Wish Date') }}</th>
                             </tr>
                         </thead>
@@ -74,8 +75,11 @@
                         <tbody>
 
                             @forelse ($wishlists as $wishlist)
-
+ @if(!empty($wishlist->user->name))
                                 <tr>
+
+                                   
+                                    <td>{{ $loop->iteration  }}</td>
 
                                     {{-- PRODUCT --}}
                                     <td>
@@ -93,17 +97,18 @@
                                     </td>
 
                                     {{-- QTY --}}
-                                    <td>
+                                    {{-- <td>
                                         1
-                                    </td>
+                                    </td> --}}
 
                                     {{-- DATE --}}
                                     <td>
                                         {{ optional($wishlist->created_at)->format('d M Y, h:i A') }}
                                     </td>
+                            
 
                                 </tr>
-
+        @endif
                             @empty
 
                                 <tr>

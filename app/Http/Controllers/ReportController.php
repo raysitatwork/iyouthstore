@@ -66,18 +66,6 @@ class ReportController extends Controller
         return view('backend.reports.seller_sale_report', compact('sellers', 'sort_by'));
     }
 
-    // public function wish_report(Request $request)
-    // {
-    //     $sort_by = null;
-    //     $products = Product::orderBy('created_at', 'desc');
-    //     if ($request->has('category_id')) {
-    //         $sort_by = $request->category_id;
-    //         $products = $products->where('category_id', $sort_by);
-    //     }
-    //     $products = $products->paginate(10);
-    //     return view('backend.reports.wish_report', compact('products', 'sort_by'));
-    // }
-
     public function wish_report(Request $request)
     {
         $sort_by = null;

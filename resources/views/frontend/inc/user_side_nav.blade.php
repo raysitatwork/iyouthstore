@@ -20,7 +20,7 @@
             <!-- Image -->
             <span class="avatar avatar-md mb-3">
                 @if ($user->avatar_original != null)
-                    <img src="{{ $user_avatar }}"
+                    <img src="{{ asset('public/'. $user->avatar_original) }}}"
                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
                 @else
                     <img src="{{ static_asset('assets/img/avatar-place.png') }}" class="image rounded-circle"

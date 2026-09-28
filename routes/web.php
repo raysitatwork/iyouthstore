@@ -3,6 +3,7 @@
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AizUploadController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CartController;
@@ -78,6 +79,8 @@ Route::controller(DemoController::class)->group(function () {
 Route::get('/refresh-csrf', function () {
     return csrf_token();
 });
+
+
 
 // AIZ Uploader
 Route::controller(AizUploadController::class)->group(function () {
@@ -520,7 +523,4 @@ Route::controller(ContactController::class)->group(function () {
 });
 
 Route::post('/store-location', [HomeController::class, 'store'])->name('store-location');
-
-
-
 

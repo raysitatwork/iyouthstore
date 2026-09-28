@@ -234,6 +234,12 @@
                                         {{ translate('Already have an account?')}}
                                         <a href="{{ route('user.login') }}" class="ml-2 fs-14 fw-700 animate-underline-primary">{{ translate('Log In')}}</a>
                                     </p>
+
+                                            <p class="fs-12 text-gray mb-0">
+                                        {{ translate('Back to Home Page') }}
+                                        <a href="{{ route('home') }}"
+                                            class="ml-2 fs-14 fw-700 animate-underline-primary">{{ translate('Click Here') }}</a>
+                                    </p>
                                 </div>
                             </div>
                         </div>

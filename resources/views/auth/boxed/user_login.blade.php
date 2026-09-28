@@ -111,21 +111,6 @@
                                             </div>
                                         </form>
 
-                                        <!-- DEMO MODE -->
-                                        @if (env("DEMO_MODE") == "On")
-                                            <div class="mb-4">
-                                                <table class="table table-bordered mb-0">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>{{ translate('Customer Account')}}</td>
-                                                            <td class="text-center">
-                                                                <button class="btn btn-info btn-sm" onclick="autoFillCustomer()">{{ translate('Copy credentials') }}</button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        @endif
 
                                         <!-- Social Login -->
                                         @if(get_setting('google_login') == 1 || get_setting('facebook_login') == 1 || get_setting('twitter_login') == 1 || get_setting('apple_login') == 1)
@@ -172,6 +157,12 @@
                                         {{ translate('Dont have an account?')}}
                                         <a href="{{ route(get_setting('customer_registration_verify') === '1' ? 'registration.verification' : 'user.registration') }}" class="ml-2 fs-14 fw-700 animate-underline-primary">{{ translate('Register Now')}}</a>
                                         {{-- <a href="{{ route('user.registration') }}" class="ml-2 fs-14 fw-700 animate-underline-primary">{{ translate('Register Now')}}</a> --}}
+                                    </p>
+
+                                            <p class="fs-12 text-gray mb-0">
+                                        {{ translate('Back to Home Page') }}
+                                        <a href="{{ route('home') }}"
+                                            class="ml-2 fs-14 fw-700 animate-underline-primary">{{ translate('Click Here') }}</a>
                                     </p>
                                 </div>
                             </div>

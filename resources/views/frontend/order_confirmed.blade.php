@@ -274,16 +274,14 @@
                                                         </td>
                                                     </tr>
 
-
-
                                                     <!-- Coupon Discount -->
-                                                    <tr>
+                                                    {{-- <tr>
                                                         <th class="border-top-0 py-2">{{ translate('Coupon Discount') }}
                                                         </th>
                                                         <td class="text-right border-top-0 pr-0 py-2">
                                                             <span>{{ single_price($order->coupon_discount) }}</span>
                                                         </td>
-                                                    </tr>
+                                                    </tr> --}}
                                                     <!-- Total -->
                                                     <tr>
                                                         <th class="py-2"><span

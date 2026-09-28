@@ -36,7 +36,7 @@ class PurchaseController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        $products = $query->latest()->get();
+        $products = $query->latest()->paginate(30);
 
         return view('seller.buy_product.index', compact('products', 'categories'));
     }

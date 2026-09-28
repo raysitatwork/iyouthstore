@@ -420,60 +420,11 @@
                 return;
             }
 
-            // debounce (important)
-            // debounceTimer = setTimeout(() => {
-
-            //     fetch(
-            //             `https://nominatim.openstreetmap.org/search?format=json&q=${query}&countrycodes=in&limit=5`)
-            //         .then(res => res.json())
-            //         .then(data => showSuggestions(data));
-
-            // }, 400);
-
             fetch(`{{ route('search-gram-panchayat') }}?q=${encodeURIComponent(query)}`)
                 .then(res => res.json())
                 .then(data => showSuggestions(data));
 
         });
-
-
-
-    // function showSuggestions(places) {
-
-    //     let box = document.getElementById("address_suggestions");
-    //     box.innerHTML = "";
-
-    //     places.forEach(place => {
-
-    //         let item = document.createElement("a");
-    //         item.className = "list-group-item list-group-item-action";
-    //         item.innerText = place.display_name;
-
-    //         item.onclick = function() {
-
-    //             let lat = place.lat;
-    //             let lng = place.lon;
-
-    //             document.getElementById("address_input").value =
-    //                 place.display_name;
-
-    //             box.innerHTML = "";
-
-    //             // Save locally
-    //             localStorage.setItem("user_lat", lat);
-    //             localStorage.setItem("user_lng", lng);
-    //             localStorage.setItem("user_address", place.display_name);
-
-    //             // Your existing function
-    //             sendLocation(lat, lng);
-
-    //             $('#locationModal').modal('hide');
-    //             $('#AnotherlocationModal').modal('hide');
-    //         };
-
-    //         box.appendChild(item);
-    //     });
-    // }
 
     function showSuggestions(places) {
     let box = document.getElementById("address_suggestions");

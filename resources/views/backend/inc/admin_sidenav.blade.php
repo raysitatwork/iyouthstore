@@ -423,7 +423,7 @@
                                                 <li class="aiz-side-nav-item">
                                                     <a href="{{ route('all_preorder.list') }}"
                                                         class="aiz-side-nav-link {{ areActiveRoutes(['preorder-order.show']) }} }}">
-                                                        <span class="aiz-side-nav-text">{{ translate('All Orders') }} <span
+                                                        <span class="aiz-side-nav-text">{{ translate('Customers Orders') }} <span
                                                                 class="badge badge-info ml-1">{{ $all_preorders_count ?: '' }}</span>
                                                         </span>
                                                     </a>

@@ -29,20 +29,13 @@
             <div class="modal-body pt-3 pb-5 px-xl-5">
                 <p class="text-danger mt-3 fw-800"><i>{{ translate('Note: ')}}&nbsp;{{ translate("Don't Click to any button or don't do any action during account Deletion, it may takes some times.")}}</i></p>
                 <p class="fs-14 fw-700" style="color: #8d8d8d;">{{ translate('Deleting Account Means:')}}</p>
-                <div class="row bg-soft-warning py-2 mb-2 ml-0 mr-0 border-left border-width-2 border-danger">
-                    <div class="col-1">
-                        <img src="{{ static_asset('assets/img/warning.png') }}" class="h-20px" alt="{{ translate('warning') }}">
-                    </div>
-                    <div class="col">
-                        <p class="fw-600 mb-0">{{ translate('If you create any classified ptoducts, after deleting your account, those products will no longer in our system') }}</p>
-                    </div>
-                </div>
+             
                 <div class="row bg-soft-warning py-3 ml-0 mr-0 border-left border-width-2 border-danger">
                     <div class="col-1">
                         <img src="{{ static_asset('assets/img/warning.png') }}" class="h-20px" alt="{{ translate('warning') }}">
                     </div>
                     <div class="col">
-                        <p class="fw-600 mb-0">{{ translate('After deleting your account, wallet balance will no longer in our system') }}</p>
+                        <p class="fw-600 mb-0">{{ translate('After deleting, your account will no longer in our system') }}</p>
                     </div>
                 </div>
             </div>

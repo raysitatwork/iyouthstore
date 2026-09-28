@@ -38,7 +38,7 @@
      data-src="{{ static_asset($shop->user->image) }}"
      alt="{{ $shop->name }}" height="200px" width="200px"
      class="img-fit lazyload has-transition"
-     onerror="this.onerror=null;this.src='https://iyouthstore.in/public/uploads/all/kU21GQWrj8hG548noAvBhwxgJTAx7uRwMdVE3BxI.webp';">
+     onerror="this.onerror=null;this.src='{{ static_asset('uploads/users/iyouth_store.webp') }}';">
                                                     
                                                     
                                            

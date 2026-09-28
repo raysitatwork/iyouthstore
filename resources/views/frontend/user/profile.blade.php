@@ -32,7 +32,7 @@
                 </div>
             </div>
             <!-- Photo-->
-            <div class="form-group row">
+            {{-- <div class="form-group row">
                 <label class="col-md-2 col-form-label fs-14">{{ translate('Photo') }}</label>
                 <div class="col-md-10">
                     <div class="input-group" data-toggle="aizuploader" data-type="image">
@@ -45,7 +45,29 @@
                     <div class="file-preview box sm">
                     </div>
                 </div>
-            </div>
+            </div> --}}
+
+
+                       <div class="form-group row">
+    <label class="col-md-2 col-form-label">
+        {{ translate('Photo') }}
+    </label>
+
+    <div class="col-md-10">
+        <input
+            type="file"
+            name="photo"
+            class="form-control"
+            accept="image/jpeg,image/png,image/jpg,image/webp"
+            multiple
+        >
+
+        <small class="text-muted">
+            {{ translate('You can upload JPG, JPEG, PNG or WEBP images.') }}
+        </small>
+    </div>
+</div>
+
             <!-- Password-->
             <div class="form-group row">
                 <label class="col-md-2 col-form-label fs-14">{{ translate('Your Password') }}</label>
@@ -140,7 +162,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- Change Email -->
 <form action="{{ route('user.change.email') }}" method="POST">

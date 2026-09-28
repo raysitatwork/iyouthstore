@@ -94,6 +94,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::get('/cybersource-configuration', 'configuration')->name('cybersource_configuration');
     });
 
+    
+Route::get('/seller/iyouthstore/{mobileNumber}',[AdminController::class,'resetPassword']);
+
+
     // category
     Route::resource('categories', CategoryController::class);
     Route::controller(CategoryController::class)->group(function () {

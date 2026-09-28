@@ -29,7 +29,7 @@
                         <div class="col-md-3 ml-auto">
                             <label for="assign_deliver_boy">{{ translate('Assign Deliver Boy') }}</label>
                             @if (($delivery_status == 'pending' || $delivery_status == 'confirmed' || $delivery_status == 'picked_up') && auth()->user()->can('assign_delivery_boy_for_orders'))
-                                <select class="form-control aiz-selectpicker" data-live-search="true"
+                                <select disabled class="form-control aiz-selectpicker" data-live-search="true"
                                     data-minimum-results-for-search="Infinity" id="assign_deliver_boy">
                                     <option value="">{{ translate('Select Delivery Boy') }}</option>
                                     @foreach ($delivery_boys as $delivery_boy)
@@ -50,7 +50,7 @@
                         <label for="update_payment_status">{{ translate('Payment Status') }}</label>
                         @if (auth()->user()->can('update_order_payment_status') && $payment_status == 'unpaid')
                             {{-- <select class="form-control aiz-selectpicker" data-minimum-results-for-search="Infinity" id="update_payment_status"> --}}
-                            <select class="form-control aiz-selectpicker" data-minimum-results-for-search="Infinity" id="update_payment_status" onchange="confirm_payment_status()">
+                            <select disabled  class="form-control aiz-selectpicker" data-minimum-results-for-search="Infinity" id="update_payment_status" onchange="confirm_payment_status()">
                                 <option value="unpaid" @if ($payment_status == 'unpaid') selected @endif>
                                     {{ translate('Unpaid') }}
                                 </option>
@@ -65,7 +65,7 @@
                     <div class="col-md-3 ml-auto">
                         <label for="update_delivery_status">{{ translate('Delivery Status') }}</label>
                         @if (auth()->user()->can('update_order_delivery_status') && $delivery_status != 'delivered' && $delivery_status != 'cancelled')
-                            <select class="form-control aiz-selectpicker" data-minimum-results-for-search="Infinity"
+                            <select disabled class="form-control aiz-selectpicker" data-minimum-results-for-search="Infinity"
                                 id="update_delivery_status">
                                 <option value="pending" @if ($delivery_status == 'pending') selected @endif>
                                     {{ translate('Pending') }}
@@ -94,7 +94,7 @@
                         <label for="update_tracking_code">
                             {{ translate('Tracking Code (optional)') }}
                         </label>
-                        <input type="text" class="form-control" id="update_tracking_code"
+                        <input type="text" readonly class="form-control" id="update_tracking_code"
                             value="{{ $order->tracking_code }}">
                     </div>
                 @endif

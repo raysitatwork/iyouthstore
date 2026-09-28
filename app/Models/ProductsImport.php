@@ -190,6 +190,13 @@ class ProductsImport implements ToCollection, WithHeadingRow, WithValidation, To
                 $product->seller_price = (float) $row['seller_price'];
             }
 
+            if (
+                isset($row['seller_selling_price']) &&
+                $row['seller_selling_price'] !== ''
+            ) {
+                $product->seller_selling_price = (float) $row['seller_selling_price'];
+            }
+
             if (isset($row['unit'])) {
                 $product->unit = $row['unit'];
             }

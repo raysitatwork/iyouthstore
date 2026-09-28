@@ -121,7 +121,8 @@
                                 <label>{{ translate('Postal code')}}</label>
                             </div>
                             <div class="col-md-10">
-                                <input type="text" class="form-control mb-3 rounded-0" placeholder="{{ translate('Your Postal Code')}}" name="postal_code" value="" required>
+                                <input type="text" class="form-control mb-3 rounded-0" placeholder="{{ translate('Your Postal Code')}}" name="postal_code" value=""  maxlength="6"
+            minlength="6" required>
                             </div>
                         </div>
 
@@ -131,14 +132,11 @@
                                 <label>{{ translate('Phone')}}</label>
                             </div>
                             <div class="col-md-10">
-                                <input type="tel" id="phone-code" class="form-control rounded-0" placeholder="" name="phone" autocomplete="off" required>
+                                <input type="tel" id="phone-code" class="form-control rounded-0"  maxlength="10"
+            minlength="10" placeholder="" name="phone" autocomplete="off" required>
                                 <input type="hidden" name="country_code" value="">
                             </div>
                         </div>
-                        
-                        <!--<input type="hidden" id="latitude" name="latitude">-->
-                        <!--<input type="hidden" id="longitude" name="longitude">-->
-                        <!--<button type="button" onclick="getLocation()">Use My Location</button>-->
 
                         <!-- Save button -->
                         <div class="form-group text-right">

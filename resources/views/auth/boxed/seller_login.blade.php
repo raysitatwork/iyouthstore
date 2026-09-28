@@ -103,6 +103,12 @@
                                         {{ translate('Dont have an account?')}}
                                         <a href="{{ route(get_setting('seller_registration_verify') === '1' ? 'shop-reg.verification' : 'shops.create') }}" class="ml-2 fs-14 fw-700 animate-underline-primary">{{ translate('Register Now')}}</a>
                                     </p>
+
+                                            <p class="fs-12 text-gray mb-0">
+                                        {{ translate('Back to Home Page') }}
+                                        <a href="{{ route('home') }}"
+                                            class="ml-2 fs-14 fw-700 animate-underline-primary">{{ translate('Click Here') }}</a>
+                                    </p>
                                 </div>
                             </div>
                         </div>

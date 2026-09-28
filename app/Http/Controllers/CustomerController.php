@@ -32,8 +32,6 @@ class CustomerController extends Controller
         $block_id = $request->block_id ?? null;
         $district_id = $request->district_id ?? null;
 
-
-
         $users = User::where('user_type', 'customer')->orderBy('created_at', 'desc');
         if ($verification_status != null) {
             $users = $verification_status == 'verified' ? $users->where('email_verified_at', '!=', null) : $users->where('email_verified_at', null);

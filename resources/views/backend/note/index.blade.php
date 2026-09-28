@@ -64,10 +64,10 @@
             <table class="table aiz-table mb-0">
                 <thead>
                     <tr>
-                        <th data-breakpoints="lg">#</th>
-                        <th data-breakpoints="lg">{{ translate('User') }}</th>
-                        <th data-breakpoints="lg">{{ translate('Type') }}</th>
-                        <th data-breakpoints="lg" width="60%">{{ translate('Description') }}</th>
+                        <th data-breakpoints="md">#</th>
+                        <th data-breakpoints="md">{{ translate('User') }}</th>
+                        <th data-breakpoints="md">{{ translate('Type') }}</th>
+                        <th data-breakpoints="md" width="60%">{{ translate('Description') }}</th>
                         <!--<th data-breakpoints="lg">{{ translate('Seller Can Access') }}?</th>-->
                         <th width="10%" class="text-right">{{ translate('Options') }}</th>
                     </tr>

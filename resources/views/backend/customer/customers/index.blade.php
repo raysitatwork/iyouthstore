@@ -99,11 +99,11 @@
                             </div>
                         </th>
                         <th>{{translate('Name')}}</th>
-                        <th data-breakpoints="lg">{{translate('Email Address')}}</th>
-                        <th data-breakpoints="lg">{{translate('Phone')}}</th>
+                        <th data-breakpoints="md">{{translate('Email Address')}}</th>
+                        <th data-breakpoints="md">{{translate('Phone')}}</th>
                         <!--<th data-breakpoints="lg">{{translate('Package')}}</th>-->
                         <!--<th data-breakpoints="lg">{{translate('Wallet Balance')}}</th>-->
-                        <th data-breakpoints="lg">{{translate('Verification Status')}}</th>
+                        <th data-breakpoints="md">{{translate('Verification Status')}}</th>
                         <th class="text-right">{{translate('Options')}}</th>
                     </tr>
                 </thead>

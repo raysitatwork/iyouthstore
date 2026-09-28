@@ -127,14 +127,14 @@ class CartController extends Controller
                     'nav_cart_view' => view('frontend.partials.cart.cart')->render(),
                 );
             }
-            if ($product_stock->qty < $cart->quantity + $request['quantity']) {
-                return array(
-                    'status' => 0,
-                    'cart_count' => count($carts),
-                    'modal_view' => view('frontend.partials.outOfStockCart')->render(),
-                    'nav_cart_view' => view('frontend.partials.cart.cart')->render(),
-                );
-            }
+            // if ($product_stock->qty < $cart->quantity + $request['quantity']) {
+            //     return array(
+            //         'status' => 0,
+            //         'cart_count' => count($carts),
+            //         'modal_view' => view('frontend.partials.outOfStockCart')->render(),
+            //         'nav_cart_view' => view('frontend.partials.cart.cart')->render(),
+            //     );
+            // }
             $quantity = $cart->quantity + $request['quantity'];
         }
 

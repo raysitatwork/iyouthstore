@@ -20,12 +20,12 @@
         <table class="aiz-table" cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    <th data-breakpoints="lg">{{ translate('Ticket ID') }}</th>
-                    <th data-breakpoints="lg">{{ translate('Sending Date') }}</th>
+                    <th data-breakpoints="md">{{ translate('Ticket ID') }}</th>
+                    <th data-breakpoints="md">{{ translate('Sending Date') }}</th>
                     <th>{{ translate('Subject') }}</th>
-                    <th data-breakpoints="lg">{{ translate('User') }}</th>
-                    <th data-breakpoints="lg">{{ translate('Status') }}</th>
-                    <th data-breakpoints="lg">{{ translate('Last reply') }}</th>
+                    <th data-breakpoints="md">{{ translate('User') }}</th>
+                    <th data-breakpoints="md">{{ translate('Status') }}</th>
+                    <th data-breakpoints="md">{{ translate('Last reply') }}</th>
                     <th class="text-right">{{ translate('Options') }}</th>
                 </tr>
             </thead>

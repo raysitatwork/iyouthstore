@@ -58,14 +58,13 @@ class HomeController extends Controller
         });
 
 
-           $shops = Shop::whereIn('user_id', verified_sellers_id())
+        $shops = Shop::whereIn('user_id', verified_sellers_id())
             ->paginate(8);
 
 
         $coming_soon_products = Product::where('coming_soon', 1)->orderBy('id', 'desc')->get();
 
-        return view('frontend.' . get_setting('homepage_select') . '.index', compact('featured_categories', 'lang', 'coming_soon_products','shops'));
-
+        return view('frontend.' . get_setting('homepage_select') . '.index', compact('featured_categories', 'lang', 'coming_soon_products', 'shops'));
     }
 
     function calculateDistance($lat1, $lon1, $lat2, $lon2)
@@ -85,8 +84,6 @@ class HomeController extends Controller
 
         return $distance;
     }
-
-
 
     public function store(Request $request)
     {
@@ -109,8 +106,22 @@ class HomeController extends Controller
             ->whereNotNull('longitude')
             ->get();
 
-        foreach ($shops as $shop) {
+        if ($shops->isEmpty()) {
+            session([
+                'user_latitude'    => $userLat,
+                'user_longitude'   => $userLng,
+                'is_within_radius' => false,
+            ]);
 
+            return response()->json([
+                'status' => 'No shops found',
+                'is_within_radius' => false,
+                'nearest_distance_km' => null,
+                'nearest_shop' => null,
+            ]);
+        }
+
+        foreach ($shops as $shop) {
 
             $distance = $this->calculateDistance(
                 $userLat,
@@ -137,6 +148,7 @@ class HomeController extends Controller
             'is_within_radius' => $isWithinRadius
         ]);
 
+
         return response()->json([
             'status' => 'Location stored successfully',
             'is_within_radius' => $isWithinRadius,
@@ -161,16 +173,16 @@ class HomeController extends Controller
 
     //change
     public function load_coming_soon_section()
-{
-    $coming_soon_products = Product::where('coming_soon', 1)
-        ->orderBy('id', 'desc')
-        ->get();
+    {
+        $coming_soon_products = Product::where('coming_soon', 1)
+            ->orderBy('id', 'desc')
+            ->get();
 
-    return view(
-        'frontend.' . get_setting('homepage_select') . '.partials.coming_soon',
-        compact('coming_soon_products')
-    );
-}
+        return view(
+            'frontend.' . get_setting('homepage_select') . '.partials.coming_soon',
+            compact('coming_soon_products')
+        );
+    }
 
     public function load_newest_product_section()
     {
@@ -362,10 +374,6 @@ class HomeController extends Controller
 
     public function userProfileUpdate(Request $request)
     {
-        if (env('DEMO_MODE') == 'On') {
-            flash(translate('Sorry! the action is not permitted in demo '))->error();
-            return back();
-        }
 
         $user = Auth::user();
         $user->name = $request->name;
@@ -379,7 +387,25 @@ class HomeController extends Controller
             $user->password = Hash::make($request->new_password);
         }
 
-        $user->avatar_original = $request->photo;
+        // $user->avatar_original = $request->photo;
+
+          if ($request->hasFile('photo')) {
+
+        $request->validate([
+            'photo' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
+        ]);
+
+        $photo = $request->file('photo');
+
+        $filename = time() . '_' . $photo->getClientOriginalName();
+
+        $photo->move(
+            public_path('uploads/users'),
+            $filename
+        );
+
+        $user->avatar_original = 'uploads/users/' . $filename;
+    }
         $user->save();
 
         flash(translate('Your Profile has been updated successfully!'))->success();

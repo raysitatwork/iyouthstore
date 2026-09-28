@@ -204,9 +204,9 @@
                                 <td>
                                     <div class="row gutters-5  mw-100 align-items-center">
                                         <div class="col-auto">
-                                            <img src="{{ uploaded_asset($shop->logo) }}" class="size-40px img-fit"
+                                            <img src="{{ uploaded_asset($shop->logo) }}" class="size-80px img-fit"
                                                 alt="Image"
-                                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+                                                onerror="this.onerror=null;this.src='{{ static_asset('uploads/users/iyouth_store.webp') }}';">
                                         </div>
                                         <div class="col @if ($shop->user->is_suspicious == 1) text-info @endif">
                                             <span class="text-truncate-2">

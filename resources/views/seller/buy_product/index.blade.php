@@ -139,6 +139,8 @@
                     @endforeach
 
                 </div>
+
+                  {{ $products->links() }}
             @endif
 
         </div>

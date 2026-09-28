@@ -71,6 +71,8 @@
 
                         <tbody>
                             @forelse ($carts as $cart)
+
+                             @if(!empty($wishlist->user->name))
                                 <tr>
 
                                     {{-- PRODUCT --}}
@@ -99,6 +101,8 @@
                                     </td>
 
                                 </tr>
+
+                                @endif
                             @empty
                                 <tr>
                                     <td colspan="5" class="text-center py-4">

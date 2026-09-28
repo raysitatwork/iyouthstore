@@ -125,7 +125,8 @@
                 <label>{{ translate('Postal code')}}</label>
             </div>
             <div class="col-md-10">
-                <input type="text" class="form-control mb-3 rounded-0" placeholder="{{ translate('Your Postal Code')}}" value="{{ $address_data->postal_code }}" name="postal_code" value="" required>
+                <input type="text" class="form-control mb-3 rounded-0" placeholder="{{ translate('Your Postal Code')}}" value="{{ $address_data->postal_code }}" name="postal_code" value="" maxlength="6"
+            minlength="6" required>
             </div>
         </div>
 
@@ -135,7 +136,8 @@
                 <label>{{ translate('Phone')}}</label>
             </div>
             <div class="col-md-10">
-                <input type="text" class="form-control mb-3 rounded-0" placeholder="{{ translate('+880')}}" value="{{ $address_data->phone }}" name="phone" value="" required>
+                <input type="text" class="form-control mb-3 rounded-0" placeholder="{{ translate('+880')}}" maxlength="10"
+            minlength="10" value="{{ $address_data->phone }}" name="phone" value="" required>
             </div>
         </div>
 

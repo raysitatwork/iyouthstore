@@ -1025,18 +1025,18 @@ class SellerController extends Controller
         }
 
         if ($district_id != null) {
-            $districtName = City::where('id', $district_id)->value('name');
-            $user_ids = $user_ids->where('district', $districtName);
+            // $districtName = City::where('id', $district_id)->value('name');
+            $user_ids = $user_ids->where('district', $district_id);
         }
 
         if ($block_id != null) {
-            $blockName = Block::where('id', $block_id)->value('name');
-            $user_ids = $user_ids->where('block', $blockName);
+            // $blockName = Block::where('id', $block_id)->value('name');
+            $user_ids = $user_ids->where('block', $block_id);
         }
 
         if ($sub_district_id != null) {
-            $subDistrictName = SubDistrict::where('id', $sub_district_id)->value('name');
-            $user_ids = $user_ids->where('sub_district', $subDistrictName);
+            // $subDistrictName = SubDistrict::where('id', $sub_district_id)->value('name');
+            $user_ids = $user_ids->where('sub_district', $sub_district_id);
         }
 
         $shops = $shops->whereIn(

@@ -23,7 +23,14 @@ class PurchaseHistoryController extends Controller
      */
     public function index(Request $request)
     {
-     return view('frontend.user.purchase_history');
+
+      $query = Order::with('orderDetails')
+        ->where('user_id', Auth::id())
+        ->orderBy('code', 'desc');
+
+    $orders = $query->paginate(10)->withQueryString();
+
+     return view('frontend.user.purchase_history',$orders);
     }
 
     public function digital_index()
@@ -190,40 +197,49 @@ class PurchaseHistoryController extends Controller
         return redirect()->route('cart');
     }
 
-    public function filterOrders(Request $request)
-    {
-        $tab = $request->tab;
-        $query = Order::with('orderDetails')
-            ->where('user_id', Auth::id())
-            ->orderBy('code', 'desc');
+public function filterOrders(Request $request)
+{
+    $tab = $request->tab ?? 'all';
 
-        if ($tab && $tab !== 'all') {
-            match ($tab) {
-                'unpaid' => $query->where('payment_status', 'unpaid'),
-                'to_review' => $query->whereHas(
-                    'orderDetails',
-                    fn($q) =>
-                    $q->where('reviewed', 0)->where('delivery_status', 'delivered')
-                ),
-                default => $query->where('delivery_status', $tab),
-            };
-        }
+    $query = Order::with('orderDetails')
+        ->where('user_id', Auth::id())
+        ->orderBy('code', 'desc');
 
-        $orders = $query->paginate(10)->withQueryString();
+    if ($tab !== 'all') {
+        match ($tab) {
+            'unpaid' => $query->where('payment_status', 'unpaid'),
 
-        Log::info('Filtered Orders', [
-            'tab' => $tab,
-            'user_id' => Auth::id(),
-            'order_ids' => $orders->pluck('id')->toArray(),
-        ]);
+            'to_review' => $query->whereHas('orderDetails', function ($q) {
+                $q->where('reviewed', 0)
+                  ->where('delivery_status', 'delivered');
+            }),
 
-        $view = view(
-            $tab === 'to_review'
-                ? 'frontend.user.purchase_history_to_review'
-                : 'frontend.user.single_purchase_history',
-            compact('orders')
-        )->render();
+            'pending',
+            'on_the_way',
+            'delivered',
+            'cancelled',
+            'confirmed',
+            'picked_up'
+                => $query->where('delivery_status', $tab),
 
-        return response()->json(['html' => $view]);
+            default => null,
+        };
     }
+
+    $orders = $query->paginate(10)->withQueryString();
+
+    Log::info('Filtered Orders', [
+        'tab' => $tab,
+        'user_id' => Auth::id(),
+        'order_ids' => $orders->pluck('id')->toArray(),
+    ]);
+
+    $view = $tab === 'to_review'
+        ? view('frontend.user.purchase_history_to_review', compact('orders'))->render()
+        : view('frontend.user.single_purchase_history', compact('orders'))->render();
+
+    return response()->json([
+        'html' => $view
+    ]);
+}
 }

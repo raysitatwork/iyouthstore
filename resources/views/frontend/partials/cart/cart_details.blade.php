@@ -73,7 +73,7 @@
                                         <label class="aiz-checkbox d-block">
                                             <input type="checkbox" class="check-one check-seller" value="admin" @if($all_admin_products) checked @endif>
                                             <span class="fs-16 fw-700 text-dark ml-3 pb-3 d-block border-left-0 border-top-0 border-right-0 border-bottom border-dashed">
-                                                {{ translate('Inhouse Products') }} ({{ count($admin_products) }})
+                                                {{ translate('Products') }} ({{ count($admin_products) }})
                                             </span>
                                             <span class="aiz-square-check"></span>
                                         </label>
