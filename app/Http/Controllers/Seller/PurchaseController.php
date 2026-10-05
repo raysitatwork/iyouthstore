@@ -16,30 +16,39 @@ use RuntimeException;
 
 class PurchaseController extends Controller
 {
-    public function index(Request $request)
-    {
-        // Get Categories
-        $categories = \App\Models\Category::where('parent_id', 0)->get();
+public function index(Request $request)
+{
+    $categories = \App\Models\Category::where('parent_id', 0)->get();
 
-        // Base Query 
-        $query = Product::query()
-            ->leftJoin('seller_products as sp', function ($join) {
-                $join->on('products.id', '=', 'sp.product_id')
-                    ->where('sp.seller_id', auth()->id());
-            })
-            ->where('products.added_by', 'admin')
-            ->select('products.*', 'sp.stock as product_stock')
-            ->isApprovedPublished();
+    $query = Product::query()
+        ->leftJoin('seller_products as sp', function ($join) {
+            $join->on('products.id', '=', 'sp.product_id')
+                ->where('sp.seller_id', auth()->id());
+        })
+        ->where('products.added_by', 'admin')
+        ->select(
+            'products.*',
+            'sp.stock as product_stock'
+        )
+        ->isApprovedPublished();
 
-        // Category Filter
-        if ($request->category_id) {
-            $query->where('category_id', $request->category_id);
-        }
-
-        $products = $query->latest()->paginate(30);
-
-        return view('seller.buy_product.index', compact('products', 'categories'));
+    if ($request->filled('category_id')) {
+        $query->where(
+            'products.category_id',
+            $request->category_id
+        );
     }
+    
+    $products = $query
+        ->latest('products.created_at')
+        ->paginate(30)
+        ->withQueryString();
+
+    return view(
+        'seller.buy_product.index',
+        compact('products', 'categories')
+    );
+}
 
     public function comming_soon()
     {

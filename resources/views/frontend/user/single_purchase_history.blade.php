@@ -1,3 +1,5 @@
+
+@if($orders->count() > 0)
   @foreach($orders as $order)
   <div class="mb-4">
       <div class="d-flex justify-content-between align-items-center mb-2">
@@ -8,9 +10,9 @@
 
           <!-- Mobile-only buttons -->
           <div class="d-flex gap-2 d-md-none">
-              <a type="button" href="{{ route('re_order', encrypt($order->id)) }}" class="btn btn-sm border  rounded px-4 py-1 text-muted reorder-btn">
-                  {{ translate('Reorder') }}
-              </a>
+              <!--<a type="button" href="{{ route('re_order', encrypt($order->id)) }}" class="btn btn-sm border  rounded px-4 py-1 text-muted reorder-btn">-->
+              <!--    {{ translate('Reorder') }}-->
+              <!--</a>-->
 
               <div class="dropdown">
                   <button type="button"
@@ -21,7 +23,7 @@
                   <div class="dropdown-menu dropdown-menu-right">
                       <a class="dropdown-item text-secondary dropdown-bg-hover" href="{{route('purchase_history.details', encrypt($order->id))}}"><i class="las la-eye mr-2"></i>{{ translate('View') }}</a>
                       <a class="dropdown-item text-secondary dropdown-bg-hover" href="{{ route('invoice.download', $order->id) }}"><i class="las la-download mr-2"></i>{{ translate('Invoice') }}</a>
-                      @if ($order->delivery_status == 'pending' && $order->payment_status == 'unpaid')
+                        @if (!in_array($order->delivery_status, ['on_the_way', 'delivered', 'cancelled']))
                         <a href="javascript:void(0)"  class="dropdown-item text-secondary dropdown-bg-hover confirm-delete" data-href="{{route('purchase_history.destroy', $order->id)}}"><i class="las la-trash mr-2"></i> {{ translate('Cancel') }}</a>
                       @endif
                   </div>
@@ -57,7 +59,7 @@
                   <div class="dropdown-menu dropdown-menu-right ">
                       <a class="dropdown-item text-secondary dropdown-bg-hover" href="{{route('purchase_history.details', encrypt($order->id))}}"><i class="las la-eye mr-2"></i>{{ translate('View') }}</a>
                       <a class="dropdown-item text-secondary dropdown-bg-hover" href="{{ route('invoice.download', $order->id) }}"><i class="las la-download mr-2"></i>{{ translate('Invoice') }}</a>
-                      @if ($order->delivery_status == 'pending' && $order->payment_status == 'unpaid')
+                  @if (!in_array($order->delivery_status, ['on_the_way', 'delivered', 'cancelled']))
                       <a href="javascript:void(0)"  class="dropdown-item text-secondary dropdown-bg-hover confirm-delete" data-href="{{route('purchase_history.destroy', $order->id)}}"><i class="las la-trash mr-2"></i> {{ translate('Cancel') }}</a>
                       @endif
                   </div>
@@ -99,7 +101,7 @@
                       <img src="{{ uploaded_asset($orderDetail->product->thumbnail_img) }}"
                           class="img-fluid mr-3 product-history-img">
 
-                      <div class="w-300px text-wrap">
+                      <div class=" text-wrap">
                           <div class="font-weight-semibold fs-14 product-name-color mobile-title-shift text-truncate-2"
                               title="{{ $orderDetail->product->getTranslation('name') }}">
                               {{ $orderDetail->product->getTranslation('name') }}
@@ -153,3 +155,12 @@
   <div class="aiz-pagination mt-4" id="pagination">
       {{ $orders->links() }}
   </div>
+  
+  @else 
+  
+  <div class="mb-4">
+      
+      <p>No Record Found</p>
+      
+  </div>
+ @endif

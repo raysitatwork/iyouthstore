@@ -127,65 +127,64 @@
                                 </td>
                             </tr>
                         @endforeach --}}
-                        
-@foreach ($products as $product)
-    @php
-        $productData = $product->product;
-    @endphp
 
-    <tr>
-        {{-- Serial Number --}}
-        <td>{{ $loop->iteration }}</td>
+                        @foreach ($products as $product)
+                            @php
+                                $productData = $product->product;
+                            @endphp
 
-        {{-- Product Name --}}
-        <td>
-            @if ($productData)
-                {{ $productData->getTranslation('name') }}
-            @else
-                N/A
-            @endif
-        </td>
+                            <tr>
+                                {{-- Serial Number --}}
+                                <td>{{ $loop->iteration }}</td>
 
-        {{-- Product Image --}}
-        <td>
-            @if ($productData && $productData->thumbnail_img)
-                <img src="{{ uploaded_asset($productData->thumbnail_img) }}"
-                    height="44"
-                    class="mw-100 mx-auto">
-            @else
-                N/A
-            @endif
-        </td>
+                                {{-- Product Name --}}
+                                <td>
+                                    @if ($productData)
+                                        {{ $productData->getTranslation('name') }}
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
 
-        {{-- Current Quantity --}}
-        <td>
-            {{ $product->stock ?? 0 }}
-        </td>
+                                {{-- Product Image --}}
+                                <td>
+                                    @if ($productData && $productData->thumbnail_img)
+                                        <img src="{{ uploaded_asset($productData->thumbnail_img) }}" height="44"
+                                            class="mw-100 mx-auto">
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
 
-        {{-- Category --}}
-        <td>
-            {{ $product->categories->first()->name ?? 'N/A' }}
-        </td>
+                                {{-- Current Quantity --}}
+                                <td>
+                                    {{ $product->stock ?? 0 }}
+                                </td>
 
-        {{-- SKU --}}
-        <td>
-            @if ($productData)
-                {{ $productData->sku ?? 'N/A' }}
-            @else
-                N/A
-            @endif
-        </td>
+                                {{-- Category --}}
+                                <td>
+                                    {{ $product->categories->first()->name ?? 'N/A' }}
+                                </td>
 
-        {{-- Base Price --}}
-        <td>
-            @if ($productData)
-                {{ single_price($productData->unit_price ?? 0) }}
-            @else
-                {{ single_price(0) }}
-            @endif
-        </td>
-    </tr>
-@endforeach
+                                {{-- SKU --}}
+                                <td>
+                                    @if ($productData)
+                                        {{ $productData->sku ?? 'N/A' }}
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
+
+                                {{-- Base Price --}}
+                                <td>
+                                    @if ($productData)
+                                        {{ single_price($productData->unit_price ?? 0) }}
+                                    @else
+                                        {{ single_price(0) }}
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
 
 
                     </tbody>

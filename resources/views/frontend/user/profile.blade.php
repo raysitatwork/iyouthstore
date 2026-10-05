@@ -19,36 +19,21 @@
             @csrf
             <!-- Name-->
             <div class="form-group row">
-                <label class="col-md-2 col-form-label fs-14 fs-14">{{ translate('Your Name') }}</label>
+                <label class="col-md-2 col-form-label fs-14 fs-14">{{ translate('Your Name') }}<span class="text-danger">*</span></label>
                 <div class="col-md-10">
-                    <input type="text" class="form-control rounded-0" placeholder="{{ translate('Your Name') }}" name="name" value="{{ Auth::user()->name }}">
+                    <input type="text" class="form-control rounded-0" placeholder="{{ translate('Your Name') }}" required name="name" value="{{ Auth::user()->name }}">
                 </div>
             </div>
             <!-- Phone-->
             <div class="form-group row">
-                <label class="col-md-2 col-form-label fs-14">{{ translate('Your Phone') }}</label>
+                <label class="col-md-2 col-form-label fs-14">{{ translate('Your Phone') }}<span class="text-danger">*</span></label>
                 <div class="col-md-10">
-                    <input type="text" class="form-control rounded-0" placeholder="{{ translate('Your Phone')}}" name="phone" value="{{ Auth::user()->phone }}">
+                    <input type="text" maxlength="10" minlength="10"  required  class="form-control rounded-0" placeholder="{{ translate('Your Phone')}}" name="phone" value="{{ Auth::user()->phone }}">
                 </div>
             </div>
-            <!-- Photo-->
-            {{-- <div class="form-group row">
-                <label class="col-md-2 col-form-label fs-14">{{ translate('Photo') }}</label>
-                <div class="col-md-10">
-                    <div class="input-group" data-toggle="aizuploader" data-type="image">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text bg-soft-secondary font-weight-medium rounded-0">{{ translate('Browse')}}</div>
-                        </div>
-                        <div class="form-control file-amount">{{ translate('Choose File') }}</div>
-                        <input type="hidden" name="photo" value="{{ Auth::user()->avatar_original }}" class="selected-files">
-                    </div>
-                    <div class="file-preview box sm">
-                    </div>
-                </div>
-            </div> --}}
-
-
-                       <div class="form-group row">
+          
+            
+            <div class="form-group row">
     <label class="col-md-2 col-form-label">
         {{ translate('Photo') }}
     </label>
@@ -62,26 +47,64 @@
             multiple
         >
 
-        <small class="text-muted">
-            {{ translate('You can upload JPG, JPEG, PNG or WEBP images.') }}
+      <div>
+                          <small class="text-muted">
+                            {{ translate('You can upload JPG, JPEG, PNG or WEBP images.') }}
+                        </small>
+                      </div>
+
+                      <div>
+                        <p>
+                            Current Photo
+                        </p>
+                    
+                        @if (Auth::user()->avatar_original != null)
+                            <img src="{{ asset('public/' . Auth::user()->avatar_original) }}" height="80" width="80"
+                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
+                        @endif
+                          </div>
+    </div>
+</div>
+            
+       
+<!-- Password -->
+<div class="form-group row">
+    <label class="col-md-2 col-form-label fs-14">
+        {{ translate('Your Password') }}
+    </label>
+    <div class="col-md-10">
+        <input
+            type="password"
+            class="form-control rounded-0"
+            placeholder="{{ translate('New Password') }}"
+            name="new_password"
+            id="new_password" minlength="6"
+        >
+        <small class="text-danger d-none" id="password_error">
+            Password is required.
         </small>
     </div>
 </div>
 
-            <!-- Password-->
-            <div class="form-group row">
-                <label class="col-md-2 col-form-label fs-14">{{ translate('Your Password') }}</label>
-                <div class="col-md-10">
-                    <input type="password" class="form-control rounded-0" placeholder="{{ translate('New Password') }}" name="new_password">
-                </div>
-            </div>
-            <!-- Confirm Password-->
-            <div class="form-group row">
-                <label class="col-md-2 col-form-label fs-14">{{ translate('Confirm Password') }}</label>
-                <div class="col-md-10">
-                    <input type="password" class="form-control rounded-0" placeholder="{{ translate('Confirm Password') }}" name="confirm_password">
-                </div>
-            </div>
+<!-- Confirm Password -->
+<div class="form-group row">
+    <label class="col-md-2 col-form-label fs-14">
+        {{ translate('Confirm Password') }}
+    </label>
+    <div class="col-md-10">
+        <input
+            type="password"
+            class="form-control rounded-0"
+            placeholder="{{ translate('Confirm Password') }}"
+            name="confirm_password"
+            id="confirm_password" minlength="6"
+        >
+        <small class="text-danger d-none" id="confirm_password_error">
+            Passwords do not match.
+        </small>
+    </div>
+</div>
+
             <!-- Submit Button-->
             <div class="form-group mb-0 text-right">
                 <button type="submit" class="btn btn-primary rounded-0 w-150px mt-3">{{translate('Update Profile')}}</button>
@@ -162,6 +185,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Change Email -->
 <form action="{{ route('user.change.email') }}" method="POST">
@@ -254,6 +278,80 @@
             get_city_by_country(@json(get_active_countries()[0]->id));
         @endif
     });
+    
+
+$(document).ready(function () {
+
+    const newPassword = $('#new_password');
+    const confirmPassword = $('#confirm_password');
+    const passwordError = $('#password_error');
+    const confirmPasswordError = $('#confirm_password_error');
+
+    // Check password match
+    function validatePassword() {
+
+        let password = newPassword.val();
+        let confirmPasswordValue = confirmPassword.val();
+
+        // If both are empty, password update is not required
+        if (password === '' && confirmPasswordValue === '') {
+            newPassword.removeClass('is-invalid');
+            confirmPassword.removeClass('is-invalid');
+
+            passwordError.addClass('d-none');
+            confirmPasswordError.addClass('d-none');
+
+            return true;
+        }
+
+        // If new password is entered but confirm password is empty
+        if (password !== '' && confirmPasswordValue === '') {
+            confirmPassword.addClass('is-invalid');
+            confirmPasswordError
+                .removeClass('d-none')
+                .text('Please confirm your password.');
+
+            return false;
+        }
+
+        // If passwords don't match
+        if (password !== confirmPasswordValue) {
+            confirmPassword.addClass('is-invalid');
+
+            confirmPasswordError
+                .removeClass('d-none')
+                .text('Passwords do not match.');
+
+            return false;
+        }
+
+        // Passwords match
+        newPassword.removeClass('is-invalid');
+        confirmPassword.removeClass('is-invalid');
+
+        passwordError.addClass('d-none');
+        confirmPasswordError.addClass('d-none');
+
+        return true;
+    }
+
+    // Validate while typing
+    newPassword.on('input', validatePassword);
+    confirmPassword.on('input', validatePassword);
+
+    // Validate before form submit
+    $('form[action="{{ route('user.profile.update') }}"]').on('submit', function (e) {
+
+        if (!validatePassword()) {
+            e.preventDefault();
+
+            confirmPassword.focus();
+        }
+
+    });
+
+});
+    
 </script>
 
 @if (get_setting('google_map') == 1)

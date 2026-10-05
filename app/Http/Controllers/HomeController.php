@@ -372,10 +372,19 @@ class HomeController extends Controller
         }
     }
 
+
     public function userProfileUpdate(Request $request)
     {
-
         $user = Auth::user();
+
+        // Validate profile and password
+        $request->validate([
+            'name'             => 'required|string|max:255',
+            'new_password'     => 'nullable|string|min:6|same:confirm_password',
+            'confirm_password' => 'nullable|string|min:6',
+        ]);
+
+        // Update basic information
         $user->name = $request->name;
         $user->address = $request->address;
         $user->country = $request->country;
@@ -383,35 +392,85 @@ class HomeController extends Controller
         $user->postal_code = $request->postal_code;
         $user->phone = $request->phone;
 
-        if ($request->new_password != null && ($request->new_password == $request->confirm_password)) {
+        // Update password only when new password is provided
+        if ($request->filled('new_password')) {
             $user->password = Hash::make($request->new_password);
         }
 
-        // $user->avatar_original = $request->photo;
+        // Upload profile photo
+        if ($request->hasFile('photo')) {
 
-          if ($request->hasFile('photo')) {
+            $request->validate([
+                'photo' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
+            ]);
 
-        $request->validate([
-            'photo' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
-        ]);
+            $photo = $request->file('photo');
 
-        $photo = $request->file('photo');
+            $filename = time() . '_' . $photo->getClientOriginalName();
 
-        $filename = time() . '_' . $photo->getClientOriginalName();
+            $photo->move(
+                public_path('uploads/users'),
+                $filename
+            );
 
-        $photo->move(
-            public_path('uploads/users'),
-            $filename
-        );
+            $user->avatar_original = 'uploads/users/' . $filename;
+        }
 
-        $user->avatar_original = 'uploads/users/' . $filename;
-    }
         $user->save();
 
         flash(translate('Your Profile has been updated successfully!'))->success();
+
         return back();
     }
 
+
+    // public function userProfileUpdate(Request $request)
+    // {
+    //     $user = Auth::user();
+
+    //     $request->validate([
+    //         'name'         => 'required|string|max:255',
+    //         'new_password' => 'nullable|min:6|same:confirm_password',
+    //         'confirm_password' => 'nullable|min:6',
+    //     ]);
+
+    //     $user->name = $request->name;
+    //     $user->address = $request->address;
+    //     $user->country = $request->country;
+    //     $user->city = $request->city;
+    //     $user->postal_code = $request->postal_code;
+    //     $user->phone = $request->phone;
+
+    //     // Update password only when provided
+    //     if ($request->filled('new_password')) {
+    //         $user->password = Hash::make($request->new_password);
+    //     }
+
+    //     // Upload profile photo
+    //     if ($request->hasFile('photo')) {
+
+    //         $request->validate([
+    //             'photo' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
+    //         ]);
+
+    //         $photo = $request->file('photo');
+
+    //         $filename = time() . '_' . $photo->getClientOriginalName();
+
+    //         $photo->move(
+    //             public_path('uploads/users'),
+    //             $filename
+    //         );
+
+    //         $user->avatar_original = 'uploads/users/' . $filename;
+    //     }
+
+    //     $user->save();
+
+    //     flash(translate('Your Profile has been updated successfully!'))->success();
+
+    //     return back();
+    // }
     public function flash_deal_details($slug)
     {
         $today = strtotime(date('Y-m-d H:i:s'));

@@ -20,6 +20,7 @@
         <table class="aiz-table" cellspacing="0" width="100%">
             <thead>
                 <tr>
+                    <th data-breakpoints="md">{{ translate('No') }}</th>
                     <th data-breakpoints="md">{{ translate('Ticket ID') }}</th>
                     <th data-breakpoints="md">{{ translate('Sending Date') }}</th>
                     <th>{{ translate('Subject') }}</th>
@@ -33,6 +34,7 @@
                     @foreach ($tickets as $key => $ticket)
                     @if ($ticket->user != null)
                         <tr>
+                            <td>{{ $loop->iteration }}</td>
                             <td>#{{ $ticket->code }}</td>
                             <td>{{ $ticket->created_at }} @if($ticket->viewed == 0) <span class="badge badge-inline badge-info">{{ translate('New') }}</span> @endif</td>
                             <td>{{ $ticket->subject }}</td>

@@ -72,12 +72,12 @@
                     </li>
 
                     <!-- Warranty -->
-                    <li class="nav-item">
-                        <a class="nav-link" id="warranty-tab" href="#warranty" data-toggle="tab" data-target="#warranty"
-                            type="button" role="tab" aria-controls="warranty" aria-selected="false">
-                            {{ translate('Warranty') }}
-                        </a>
-                    </li>
+                    <!--<li class="nav-item">-->
+                    <!--    <a class="nav-link" id="warranty-tab" href="#warranty" data-toggle="tab" data-target="#warranty"-->
+                    <!--        type="button" role="tab" aria-controls="warranty" aria-selected="false">-->
+                    <!--        {{ translate('Warranty') }}-->
+                    <!--    </a>-->
+                    <!--</li>-->
 
                     <!-- Frequently Bought Product -->
                     <li class="nav-item">
@@ -198,18 +198,18 @@
                                                 </div>
                                             </div>
 
-                                            @if (addon_is_activated('pos_system'))
+                                            <!--@if (addon_is_activated('pos_system'))-->
                                                 <!-- Barcode -->
-                                                <div class="form-group row">
-                                                    <label
-                                                        class="col-xxl-3 col-from-label fs-13">{{ translate('Barcode') }}</label>
-                                                    <div class="col-xxl-9">
-                                                        <input type="text" class="form-control" name="barcode"
-                                                            value="{{ old('barcode') }}"
-                                                            placeholder="{{ translate('Barcode') }}">
-                                                    </div>
-                                                </div>
-                                            @endif
+                                            <!--    <div class="form-group row">-->
+                                            <!--        <label-->
+                                            <!--            class="col-xxl-3 col-from-label fs-13">{{ translate('Barcode') }}</label>-->
+                                            <!--        <div class="col-xxl-9">-->
+                                            <!--            <input type="text" class="form-control" name="barcode"-->
+                                            <!--                value="{{ old('barcode') }}"-->
+                                            <!--                placeholder="{{ translate('Barcode') }}">-->
+                                            <!--        </div>-->
+                                            <!--    </div>-->
+                                            <!--@endif-->
                                         </div>
 
                                         <!-- Product Category -->
@@ -327,52 +327,51 @@
                                                 class="text-muted">{{ translate('If you enable this, this product will be granted as a todays deal product.') }}</small>
                                         </div>
                                     </div>
-                                    
-<!-- Coming Soon -->
-<div class="form-group row">
-    <label class="col-md-3 col-from-label">
-        {{ translate('Coming Soon') }}
-    </label>
 
-    <div class="col-md-9">
-        <label class="aiz-switch aiz-switch-success mb-0 d-block">
-            <input type="checkbox"
-                   name="coming_soon"
-                   value="1"
-                   {{ old('coming_soon', $product->coming_soon ?? 0) == 1 ? 'checked' : '' }}>
-            <span></span>
-        </label>
-
-        <small class="text-muted">
-            {{ translate('If you enable this, this product will be marked as coming soon.') }}
-        </small>
-    </div>
-</div>
-
-
-                                <!-- Flash Deal -->
-                                <h5 class="mb-3 mt-4 pb-3 fs-17 fw-700" style="border-bottom: 1px dashed #e4e5eb;">
-                                    {{ translate('Flash Deal') }}
-                                    <small
-                                        class="text-muted">({{ translate('If you want to select this product as a flash deal, you can use it') }})</small>
-                                </h5>
-                                <div class="w-100">
-                                    <!-- Add To Flash -->
+                                    <!-- Coming Soon -->
                                     <div class="form-group row">
-                                        <label class="col-md-3 col-from-label">{{ translate('Add To Flash') }}</label>
-                                        <div class="col-xxl-9">
-                                            <select class="form-control aiz-selectpicker" name="flash_deal_id"
-                                                id="flash_deal">
-                                                <option value="">{{ translate('Choose Flash Title') }}</option>
-                                                @foreach (\App\Models\FlashDeal::where('status', 1)->get() as $flash_deal)
-                                                    <option value="{{ $flash_deal->id }}">
-                                                        {{ $flash_deal->title }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
+                                        <label class="col-md-3 col-from-label">
+                                            {{ translate('Coming Soon') }}
+                                        </label>
+
+                                        <div class="col-md-9">
+                                            <label class="aiz-switch aiz-switch-success mb-0 d-block">
+                                                <input type="checkbox" name="coming_soon" value="1"
+                                                    {{ old('coming_soon', $product->coming_soon ?? 0) == 1 ? 'checked' : '' }}>
+                                                <span></span>
+                                            </label>
+
+                                            <small class="text-muted">
+                                                {{ translate('If you enable this, this product will be marked as coming soon.') }}
+                                            </small>
                                         </div>
                                     </div>
-                                    <!-- Discount -->
+
+                                </div>
+
+                                 <!--Flash Deal -->
+                                <h5 class="mb-3 mt-4 pb-3 fs-17 fw-700" style="border-bottom: 1px dashed #e4e5eb;">
+                                    {{ translate('Discount') }}
+                                    <!--<small-->
+                                    <!--    class="text-muted">({{ translate('If you want to select this product as a flash deal, you can use it') }})</small>-->
+                                </h5>
+                                <div class="w-100">
+                                     <!--Add To Flash -->
+                                    <!--<div class="form-group row">-->
+                                    <!--    <label class="col-md-3 col-from-label">{{ translate('Add To Flash') }}</label>-->
+                                    <!--    <div class="col-xxl-9">-->
+                                    <!--        <select class="form-control aiz-selectpicker" name="flash_deal_id"-->
+                                    <!--            id="flash_deal">-->
+                                    <!--            <option value="">{{ translate('Choose Flash Title') }}</option>-->
+                                    <!--            @foreach (\App\Models\FlashDeal::where('status', 1)->get() as $flash_deal)-->
+                                    <!--                <option value="{{ $flash_deal->id }}">-->
+                                    <!--                    {{ $flash_deal->title }}-->
+                                    <!--                </option>-->
+                                    <!--            @endforeach-->
+                                    <!--        </select>-->
+                                    <!--    </div>-->
+                                    <!--</div>-->
+                                     <!--Discount -->
                                     <div class="form-group row">
                                         <label class="col-md-3 col-from-label">{{ translate('Discount') }}</label>
                                         <div class="col-xxl-9">
@@ -380,7 +379,7 @@
                                                 step="0.01" class="form-control">
                                         </div>
                                     </div>
-                                    <!-- Discount Type -->
+                                     <!--Discount Type -->
                                     <div class="form-group row">
                                         <label class="col-md-3 col-from-label">{{ translate('Discount Type') }}</label>
                                         <div class="col-xxl-9">
@@ -395,9 +394,9 @@
                                 </div>
 
                                 <!-- Vat & TAX -->
-                                <h5 class="mb-3 mt-4 pb-3 fs-17 fw-700" style="border-bottom: 1px dashed #e4e5eb;">
+                                <h5 class="mb-3 mt-4 pb-3 fs-17 fw-700 d-none" style="border-bottom: 1px dashed #e4e5eb;">
                                     {{ translate('Vat & TAX') }}</h5>
-                                <div class="w-100">
+                                <div class="w-100 d-none">
                                     @foreach (\App\Models\Tax::where('tax_status', 1)->get() as $tax)
                                         <label for="name">
                                             {{ $tax->name }}
@@ -418,6 +417,29 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                </div>
+                                
+                                
+                                     <!--Vat & TAX -->
+                                <h5 class="mb-3 mt-4 pb-3 fs-17 fw-700" style="border-bottom: 1px dashed #e4e5eb;">
+                                    {{ translate('TAX') }}     <small class="text-muted">(Included in price)</small></h5>
+                                <div class="w-100">
+                                  
+
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <input type="number" lang="en" min="0" value="0"
+                                                    step="0.01" placeholder="{{ translate('Tax') }}" name="tax1"
+                                                    class="form-control">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <select class="form-control aiz-selectpicker" name="tax_type1">
+                                                    <!--<option value="amount">{{ translate('Flat') }}</option>-->
+                                                    <option selected disabled value="percent">{{ translate('Percent') }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
                                 </div>
                             </div>
                         </div>
@@ -666,17 +688,18 @@
                                         </div>
                                     </div>
 
-                                      <!-- seller selling price -->
+                                    <!-- seller selling price -->
                                     <div class="form-group row">
-                                        <label class="col-md-3 col-from-label">{{ translate('Seller Selling Price') }} <span
-                                                class="text-danger">*</span></label>
+                                        <label class="col-md-3 col-from-label">{{ translate('Seller Selling Price') }}
+                                            <span class="text-danger">*</span></label>
                                         <div class="col-md-6">
                                             <input type="number" lang="en" min="0" value="0"
-                                                step="0.01" placeholder="{{ translate('Seller selling price') }}"
+                                                step="0.01" placeholder="{{ translate('Seller Selling price') }}"
                                                 name="seller_selling_price"
                                                 class="form-control @error('seller_selling_price') is-invalid @enderror">
                                         </div>
                                     </div>
+
 
                                     <!-- Min Seller Purchase Limit -->
                                     <div class="form-group row">
@@ -695,7 +718,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- Seller Purchase Limit -->
+                                    <!--Max Seller Purchase Limit -->
                                     <div class="form-group row">
                                         <label class="col-md-3 col-from-label">
                                             {{ translate('Seller Max Purchase Limit') }}
@@ -865,7 +888,7 @@
                                     <!--    </div>-->
                                     <!--</div>-->
 
-                                         <input type="hidden" name="stock_visibility_state" value="hide">
+                                    <input type="hidden" name="stock_visibility_state" value="hide">
                                 </div>
                             </div>
                         </div>
@@ -981,16 +1004,16 @@
                                             </div>
                                         </div>
                                         <!-- Is Product Quantity Mulitiply -->
-                                        <div class="form-group row">
-                                            <label
-                                                class="col-md-3 col-from-label">{{ translate('Is Product Quantity Mulitiply') }}</label>
-                                            <div class="col-md-9">
-                                                <label class="aiz-switch aiz-switch-success mb-0">
-                                                    <input type="checkbox" name="is_quantity_multiplied" value="1">
-                                                    <span></span>
-                                                </label>
-                                            </div>
-                                        </div>
+                                        <!--<div class="form-group row">-->
+                                        <!--    <label-->
+                                        <!--        class="col-md-3 col-from-label">{{ translate('Is Product Quantity Mulitiply') }}</label>-->
+                                        <!--    <div class="col-md-9">-->
+                                        <!--        <label class="aiz-switch aiz-switch-success mb-0">-->
+                                        <!--            <input type="checkbox" name="is_quantity_multiplied" value="1">-->
+                                        <!--            <span></span>-->
+                                        <!--        </label>-->
+                                        <!--    </div>-->
+                                        <!--</div>-->
                                     @else
                                         <p>
                                             {{ translate('Product wise shipping cost is disable. Shipping cost is configured from here') }}
@@ -1229,18 +1252,19 @@
                 success: function(data) {
                     var obj = JSON.parse(data);
                     $('#customer_choice_options').append('\
-                    <div class="form-group row">\
-                        <div class="col-md-3">\
-                            <input type="hidden" name="choice_no[]" value="' + i + '">\
-                            <input type="text" class="form-control" name="choice[]" value="' + name +
+                        <div class="form-group row">\
+                            <div class="col-md-3">\
+                                <input type="hidden" name="choice_no[]" value="' + i + '">\
+                                <input type="text" class="form-control" name="choice[]" value="' + name +
                         '" placeholder="{{ translate('Choice Title') }}" readonly>\
-                        </div>\
-                        <div class="col-md-8">\
-                            <select class="form-control aiz-selectpicker attribute_choice" data-live-search="true" name="choice_options_' + i + '[]" data-selected-text-format="count" multiple>\
-                                ' + obj + '\
-                            </select>\
-                        </div>\
-                    </div>');
+                            </div>\
+                            <div class="col-md-8">\
+                                <select class="form-control aiz-selectpicker attribute_choice" data-live-search="true" name="choice_options_' +
+                        i + '[]" data-selected-text-format="count" multiple>\
+                                    ' + obj + '\
+                                </select>\
+                            </div>\
+                        </div>');
                     AIZ.plugins.bootstrapSelect('refresh');
                 }
             });
@@ -1429,7 +1453,7 @@
                         $('.refund-block').addClass('d-none');
                         $note.text(
                                 '{{ translate('Selected main category has no refund. Select a refundable category.') }}'
-                                )
+                            )
                             .removeClass('d-none');
                     }
                 },

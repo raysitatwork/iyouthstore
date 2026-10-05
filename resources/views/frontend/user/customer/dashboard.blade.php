@@ -19,7 +19,7 @@
 
     <div class="row gutters-16">
         <!-- Wallet summary -->
-        @if (get_setting('wallet_system') == 1)
+        {{-- @if (get_setting('wallet_system') == 1)
         <div class="col-xl-8 col-md-6 mb-4">
             <div class="h-100" style="background-image: url('{{ static_asset("assets/img/wallet-bg.png") }}'); background-size: cover; background-position: center center;">
                 <div class="p-4 h-100 w-100 w-xl-50">
@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-        @endif
+        @endif --}}
 
         <div class="col mb-4">
             <div class="h-100">
@@ -47,14 +47,16 @@
                     <div class="col">
                         <div class="p-4 bg-primary @if(!addon_is_activated('club_point')) h-100 @endif" style="margin-bottom: 2rem;">
                             <div class="d-flex align-items-center pb-4 ">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-                                    <g id="Group_25000" data-name="Group 25000" transform="translate(-926 -614)">
-                                    <rect id="Rectangle_18646" data-name="Rectangle 18646" width="48" height="48" rx="24" transform="translate(926 614)" fill="rgba(255,255,255,0.5)"/>
-                                    <g id="Group_24786" data-name="Group 24786" transform="translate(701.466 93)">
-                                        <path id="Path_32311" data-name="Path 32311" d="M122.052,10V8.55a.727.727,0,1,0-1.455,0V10a2.909,2.909,0,0,0-2.909,2.909v.727A2.909,2.909,0,0,0,120.6,16.55h1.455A1.454,1.454,0,0,1,123.506,18v.727a1.454,1.454,0,0,1-1.455,1.455H120.6a1.454,1.454,0,0,1-1.455-1.455.727.727,0,1,0-1.455,0,2.909,2.909,0,0,0,2.909,2.909V23.1a.727.727,0,1,0,1.455,0V21.641a2.909,2.909,0,0,0,2.909-2.909V18a2.909,2.909,0,0,0-2.909-2.909H120.6a1.454,1.454,0,0,1-1.455-1.455v-.727a1.454,1.454,0,0,1,1.455-1.455h1.455a1.454,1.454,0,0,1,1.455,1.455.727.727,0,0,0,1.455,0A2.909,2.909,0,0,0,122.052,10" transform="translate(127.209 529.177)" fill="#fff"/>
-                                    </g>
-                                    </g>
-                                </svg>
+                                                           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+    <g>
+        <rect width="48" height="48" rx="24" fill="rgba(255,255,255,0.5)"/>
+        <text x="24" y="31"
+              text-anchor="middle"
+              font-size="22"
+              font-family="Arial, sans-serif"
+              fill="#fff">₹</text>
+    </g>
+</svg>
                                 <div class="ml-3 d-flex flex-column justify-content-between">
                                     <span class="fs-14 fw-400 text-white mb-1">{{ translate('Total Expenditure') }}</span>
                                     <span class="fs-20 fw-700 text-white">{{ single_price(get_user_total_expenditure()) }}</span>

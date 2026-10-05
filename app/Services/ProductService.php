@@ -152,6 +152,7 @@ class ProductService
         ))->toArray();
 
         $data['seller_selling_price'] = $collection['seller_selling_price'] ?? null;
+        $data['tax1'] = $collection['tax1'] ?? 0;
         $data['seller_purchase_limit'] = $collection['seller_purchase_limit'] ?? null;
         $data['seller_min_purchase_limit'] = $collection['seller_min_purchase_limit'] ?? null;
 
@@ -301,6 +302,7 @@ class ProductService
             'attributes',
         ))->toArray();
 
+        $data['tax1'] = $collection['tax1'] ?? 0;
         $data['seller_purchase_limit'] = $collection['seller_purchase_limit'] ?? null;
         $data['seller_min_purchase_limit'] = $collection['seller_min_purchase_limit'] ?? null;
                 $data['seller_selling_price'] = $collection['seller_selling_price'] ?? null;

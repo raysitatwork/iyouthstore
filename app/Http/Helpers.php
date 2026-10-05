@@ -2164,7 +2164,8 @@ if (!function_exists('get_user_total_expenditure')) {
     function get_user_total_expenditure()
     {
         $user_expenditure_query = Order::query();
-        return  $user_expenditure_query->where('user_id', Auth::user()->id)->where('payment_status', 'paid')->sum('grand_total');
+        // return  $user_expenditure_query->where('user_id', Auth::user()->id)->where('payment_status', 'paid')->sum('grand_total');
+            return  $user_expenditure_query->where('user_id', Auth::user()->id)->sum('grand_total');
     }
 }
 

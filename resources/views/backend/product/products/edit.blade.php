@@ -61,12 +61,12 @@
                     </li>
 
                     <!-- Warranty -->
-                    <li class="nav-item">
-                        <a class="nav-link" id="warranty-tab" href="#warranty" data-toggle="tab" data-target="#warranty"
-                            type="button" role="tab" aria-controls="warranty" aria-selected="false">
-                            {{ translate('Warranty') }}
-                        </a>
-                    </li>
+                    <!--<li class="nav-item">-->
+                    <!--    <a class="nav-link" id="warranty-tab" href="#warranty" data-toggle="tab" data-target="#warranty"-->
+                    <!--        type="button" role="tab" aria-controls="warranty" aria-selected="false">-->
+                    <!--        {{ translate('Warranty') }}-->
+                    <!--    </a>-->
+                    <!--</li>-->
 
                     <!-- Frequently Bought Product -->
                     <li class="nav-item">
@@ -202,18 +202,7 @@
                                                 </div>
                                             </div>
 
-                                            @if (addon_is_activated('pos_system'))
-                                                <!-- Barcode -->
-                                                <div class="form-group row">
-                                                    <label
-                                                        class="col-xxl-3 col-from-label fs-13">{{ translate('Barcode') }}</label>
-                                                    <div class="col-xxl-9">
-                                                        <input type="text" class="form-control" name="barcode"
-                                                            placeholder="{{ translate('Barcode') }}"
-                                                            value="{{ $product->barcode }}">
-                                                    </div>
-                                                </div>
-                                            @endif
+                                    
                                         </div>
 
                                         <!-- Product Category -->
@@ -366,31 +355,31 @@
 
                                 <!-- Flash Deal -->
                                 <h5 class="mb-3 mt-4 pb-3 fs-17 fw-700" style="border-bottom: 1px dashed #e4e5eb;">
-                                    {{ translate('Flash Deal') }}
-                                    <small
-                                        class="text-muted">({{ translate('If you want to select this product as a flash deal, you can use it') }})</small>
+                                    {{ translate('Discount') }}
+                                    <!--<small-->
+                                    <!--    class="text-muted">({{ translate('If you want to select this product as a flash deal, you can use it') }})</small>-->
                                 </h5>
                                 <div class="w-100">
                                     <!-- Add To Flash -->
-                                    <div class="form-group row">
-                                        <label class="col-md-3 col-from-label">{{ translate('Add To Flash') }}</label>
-                                        <div class="col-xxl-9">
-                                            @php
-                                                $productFlashDealId =
-                                                    $product->flash_deal_products->last()->flash_deal_id ?? null;
-                                            @endphp
-                                            <select class="form-control aiz-selectpicker" name="flash_deal_id"
-                                                id="video_provider">
-                                                <option value="">{{ translate('Choose Flash Title') }}</option>
-                                                @foreach (\App\Models\FlashDeal::where('status', 1)->get() as $flash_deal)
-                                                    <option value="{{ $flash_deal->id }}"
-                                                        @if ($productFlashDealId == $flash_deal->id) selected @endif>
-                                                        {{ $flash_deal->title }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
+                                    <!--<div class="form-group row">-->
+                                    <!--    <label class="col-md-3 col-from-label">{{ translate('Add To Flash') }}</label>-->
+                                    <!--    <div class="col-xxl-9">-->
+                                    <!--        @php-->
+                                    <!--            $productFlashDealId =-->
+                                    <!--                $product->flash_deal_products->last()->flash_deal_id ?? null;-->
+                                    <!--        @endphp-->
+                                    <!--        <select class="form-control aiz-selectpicker" name="flash_deal_id"-->
+                                    <!--            id="video_provider">-->
+                                    <!--            <option value="">{{ translate('Choose Flash Title') }}</option>-->
+                                    <!--            @foreach (\App\Models\FlashDeal::where('status', 1)->get() as $flash_deal)-->
+                                    <!--                <option value="{{ $flash_deal->id }}"-->
+                                    <!--                    @if ($productFlashDealId == $flash_deal->id) selected @endif>-->
+                                    <!--                    {{ $flash_deal->title }}-->
+                                    <!--                </option>-->
+                                    <!--            @endforeach-->
+                                    <!--        </select>-->
+                                    <!--    </div>-->
+                                    <!--</div>-->
                                     <!-- Discount -->
                                     <div class="form-group row">
                                         <label class="col-md-3 col-from-label">{{ translate('Discount') }}</label>
@@ -419,9 +408,9 @@
                                 </div>
 
                                 <!-- Vat & TAX -->
-                                <h5 class="mb-3 mt-4 pb-3 fs-17 fw-700" style="border-bottom: 1px dashed #e4e5eb;">
+                                <h5 class="mb-3 mt-4 pb-3 fs-17 fw-700 d-none" style="border-bottom: 1px dashed #e4e5eb;">
                                     {{ translate('Vat & TAX') }}</h5>
-                                <div class="w-100">
+                                <div class="w-100 d-none">
                                     @foreach (\App\Models\Tax::where('tax_status', 1)->get() as $tax)
                                         <label for="name">
                                             {{ $tax->name }}
@@ -460,6 +449,29 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                </div>
+                                
+                                
+                                      <!--Vat & TAX -->
+                                <h5 class="mb-3 mt-4 pb-3 fs-17 fw-700" style="border-bottom: 1px dashed #e4e5eb;">
+                                    {{ translate('TAX') }}     <small class="text-muted">(Included in price)</small></h5>
+                                <div class="w-100">
+                                  
+
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <input type="number" lang="en" min="0" value="0"
+                                                    step="0.01" placeholder="{{ translate('Tax') }}" name="tax1"
+                                                    class="form-control">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <select class="form-control aiz-selectpicker" name="tax_type1">
+                                                    <!--<option value="amount">{{ translate('Flat') }}</option>-->
+                                                    <option selected disabled value="percent">{{ translate('Percent') }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
                                 </div>
                             </div>
                         </div>
@@ -769,11 +781,12 @@
                                                 value="{{ $product->seller_price }}">
                                         </div>
                                     </div>
-
-                                    <!-- seller selling price -->
+                                    
+                                    
+                                        <!-- seller selling price -->
                                     <div class="form-group row">
-                                        <label class="col-md-3 col-from-label">{{ translate('Seller Selling Price') }}
-                                            <span class="text-danger">*</span></label>
+                                        <label class="col-md-3 col-from-label">{{ translate('Seller Selling Price') }} <span
+                                                class="text-danger">*</span></label>
                                         <div class="col-md-6">
                                             <input type="text" placeholder="{{ translate('Seller selling price') }}"
                                                 name="seller_selling_price"
@@ -786,6 +799,7 @@
                                         $start_date = date('d-m-Y H:i:s', $product->discount_start_date);
                                         $end_date = date('d-m-Y H:i:s', $product->discount_end_date);
                                     @endphp
+
 
                                     <!-- Min Seller Purchase Limit -->
                                     <div class="form-group row">
@@ -804,7 +818,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- Seller Purchase Limit -->
+                                    <!-- Seller Max Purchase Limit -->
                                     <div class="form-group row">
                                         <label class="col-md-3 col-from-label">
                                             {{ translate('Seller Max Purchase Limit') }}
@@ -823,8 +837,6 @@
 
                                         </div>
                                     </div>
-
-
 
 
                                     <!-- Discount Date Range -->
@@ -1125,17 +1137,17 @@
                                             </div>
                                         </div>
                                         <!-- Is Product Quantity Mulitiply -->
-                                        <div class="form-group row">
-                                            <label
-                                                class="col-md-3 col-from-label">{{ translate('Is Product Quantity Mulitiply') }}</label>
-                                            <div class="col-md-9">
-                                                <label class="aiz-switch aiz-switch-success mb-0">
-                                                    <input type="checkbox" name="is_quantity_multiplied" value="1"
-                                                        @if ($product->is_quantity_multiplied == 1) checked @endif>
-                                                    <span></span>
-                                                </label>
-                                            </div>
-                                        </div>
+                                        <!--<div class="form-group row">-->
+                                        <!--    <label-->
+                                        <!--        class="col-md-3 col-from-label">{{ translate('Is Product Quantity Mulitiply') }}</label>-->
+                                        <!--    <div class="col-md-9">-->
+                                        <!--        <label class="aiz-switch aiz-switch-success mb-0">-->
+                                        <!--            <input type="checkbox" name="is_quantity_multiplied" value="1"-->
+                                        <!--                @if ($product->is_quantity_multiplied == 1) checked @endif>-->
+                                        <!--            <span></span>-->
+                                        <!--        </label>-->
+                                        <!--    </div>-->
+                                        <!--</div>-->
                                     @else
                                         <p>
                                             {{ translate('Product wise shipping cost is disable. Shipping cost is configured from here') }}
@@ -1170,59 +1182,59 @@
                         </div>
 
                         <!-- Warranty -->
-                        <div class="tab-pane fade" id="warranty" role="tabpanel" aria-labelledby="warranty-tab">
-                            <div class="bg-white p-3 p-sm-2rem">
-                                <h5 class="mb-3 pb-3 fs-17 fw-700" style="border-bottom: 1px dashed #e4e5eb;">
-                                    {{ translate('Warranty') }}</h5>
-                                <div class="form-group row">
-                                    <label class="col-md-2 col-from-label">{{ translate('Warranty') }}</label>
-                                    <div class="col-md-10">
-                                        <label class="aiz-switch aiz-switch-success mb-0">
-                                            <input type="checkbox" name="has_warranty" onchange="warrantySelection()"
-                                                @if ($product->has_warranty == 1) checked @endif>
-                                            <span></span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div
-                                    class="w-100 warranty_selection_div @if ($product->has_warranty != 1) d-none @endif">
-                                    <div class="form-group row">
-                                        <div class="col-md-2"></div>
-                                        <div class="col-md-10">
-                                            <select class="form-control aiz-selectpicker" name="warranty_id"
-                                                id="warranty_id" data-selected="{{ $product->warranty_id }}"
-                                                data-live-search="true"
-                                                @if ($product->has_warranty == 1) required @endif>
-                                                <option value="">{{ translate('Select Warranty') }}</option>
-                                                @foreach (\App\Models\Warranty::all() as $warranty)
-                                                    <option value="{{ $warranty->id }}" @selected(old('warranty_id') == $warranty->id)>
-                                                        {{ $warranty->getTranslation('text') }}</option>
-                                                @endforeach
-                                            </select>
+                        <!--<div class="tab-pane fade" id="warranty" role="tabpanel" aria-labelledby="warranty-tab">-->
+                        <!--    <div class="bg-white p-3 p-sm-2rem">-->
+                        <!--        <h5 class="mb-3 pb-3 fs-17 fw-700" style="border-bottom: 1px dashed #e4e5eb;">-->
+                        <!--            {{ translate('Warranty') }}</h5>-->
+                        <!--        <div class="form-group row">-->
+                        <!--            <label class="col-md-2 col-from-label">{{ translate('Warranty') }}</label>-->
+                        <!--            <div class="col-md-10">-->
+                        <!--                <label class="aiz-switch aiz-switch-success mb-0">-->
+                        <!--                    <input type="checkbox" name="has_warranty" onchange="warrantySelection()"-->
+                        <!--                        @if ($product->has_warranty == 1) checked @endif>-->
+                        <!--                    <span></span>-->
+                        <!--                </label>-->
+                        <!--            </div>-->
+                        <!--        </div>-->
+                        <!--        <div-->
+                        <!--            class="w-100 warranty_selection_div @if ($product->has_warranty != 1) d-none @endif">-->
+                        <!--            <div class="form-group row">-->
+                        <!--                <div class="col-md-2"></div>-->
+                        <!--                <div class="col-md-10">-->
+                        <!--                    <select class="form-control aiz-selectpicker" name="warranty_id"-->
+                        <!--                        id="warranty_id" data-selected="{{ $product->warranty_id }}"-->
+                        <!--                        data-live-search="true"-->
+                        <!--                        @if ($product->has_warranty == 1) required @endif>-->
+                        <!--                        <option value="">{{ translate('Select Warranty') }}</option>-->
+                        <!--                        @foreach (\App\Models\Warranty::all() as $warranty)-->
+                        <!--                            <option value="{{ $warranty->id }}" @selected(old('warranty_id') == $warranty->id)>-->
+                        <!--                                {{ $warranty->getTranslation('text') }}</option>-->
+                        <!--                        @endforeach-->
+                        <!--                    </select>-->
 
-                                            <input type="hidden" name="warranty_note_id" id="warranty_note_id">
+                        <!--                    <input type="hidden" name="warranty_note_id" id="warranty_note_id">-->
 
-                                            <h5 class="fs-14 fw-600 mb-3 mt-4 pb-3"
-                                                style="border-bottom: 1px dashed #e4e5eb;">
-                                                {{ translate('Warranty Note') }}</h5>
-                                            <div id="warranty_note">
-                                                @if ($product->warrantyNote != null)
-                                                    <div class="border border-gray my-2 p-2">
-                                                        {{ $product->warrantyNote->getTranslation('description') ?? '' }}
-                                                    </div>
-                                                @endif
-                                            </div>
-                                            <button type="button"
-                                                class="btn btn-block border border-dashed hov-bg-soft-secondary mt-2 fs-14 rounded-0 d-flex align-items-center justify-content-center"
-                                                onclick="noteModal('warranty')">
-                                                <i class="las la-plus"></i>
-                                                <span class="ml-2">{{ translate('Select Warranty Note') }}</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <!--                    <h5 class="fs-14 fw-600 mb-3 mt-4 pb-3"-->
+                        <!--                        style="border-bottom: 1px dashed #e4e5eb;">-->
+                        <!--                        {{ translate('Warranty Note') }}</h5>-->
+                        <!--                    <div id="warranty_note">-->
+                        <!--                        @if ($product->warrantyNote != null)-->
+                        <!--                            <div class="border border-gray my-2 p-2">-->
+                        <!--                                {{ $product->warrantyNote->getTranslation('description') ?? '' }}-->
+                        <!--                            </div>-->
+                        <!--                        @endif-->
+                        <!--                    </div>-->
+                        <!--                    <button type="button"-->
+                        <!--                        class="btn btn-block border border-dashed hov-bg-soft-secondary mt-2 fs-14 rounded-0 d-flex align-items-center justify-content-center"-->
+                        <!--                        onclick="noteModal('warranty')">-->
+                        <!--                        <i class="las la-plus"></i>-->
+                        <!--                        <span class="ml-2">{{ translate('Select Warranty Note') }}</span>-->
+                        <!--                    </button>-->
+                        <!--                </div>-->
+                        <!--            </div>-->
+                        <!--        </div>-->
+                        <!--    </div>-->
+                        <!--</div>-->
 
                         <!-- Frequently Bought Product -->
                         <div class="tab-pane fade" id="frequenty-bought-product" role="tabpanel"
@@ -1442,19 +1454,19 @@
                 success: function(data) {
                     var obj = JSON.parse(data);
                     $('#customer_choice_options').append('\
-                            <div class="form-group row">\
-                                <div class="col-md-3">\
-                                    <input type="hidden" name="choice_no[]" value="' + i + '">\
-                                    <input type="text" class="form-control" name="choice[]" value="' + name +
+                        <div class="form-group row">\
+                            <div class="col-md-3">\
+                                <input type="hidden" name="choice_no[]" value="' + i + '">\
+                                <input type="text" class="form-control" name="choice[]" value="' + name +
                         '" placeholder="{{ translate('Choice Title') }}" readonly>\
-                                </div>\
-                                <div class="col-md-8">\
-                                    <select class="form-control aiz-selectpicker attribute_choice" data-live-search="true" name="choice_options_' +
+                            </div>\
+                            <div class="col-md-8">\
+                                <select class="form-control aiz-selectpicker attribute_choice" data-live-search="true" name="choice_options_' +
                         i + '[]" data-selected-text-format="count" multiple>\
-                                        ' + obj + '\
-                                    </select>\
-                                </div>\
-                            </div>');
+                                    ' + obj + '\
+                                </select>\
+                            </div>\
+                        </div>');
                     AIZ.plugins.bootstrapSelect('refresh');
                 }
             });

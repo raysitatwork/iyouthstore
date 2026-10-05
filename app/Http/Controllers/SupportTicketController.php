@@ -59,7 +59,7 @@ class SupportTicketController extends Controller
      */
     public function store(Request $request)
     {
-        //dd();
+
         $ticket = new Ticket;
         $ticket->code = strtotime(date('Y-m-d H:i:s')) . Auth::user()->id;
         $ticket->user_id = Auth::user()->id;

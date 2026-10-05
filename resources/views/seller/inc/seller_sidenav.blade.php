@@ -293,6 +293,35 @@
                     </a>
                 </li>
 
+                
+             <li class="aiz-side-nav-item">
+                    <a href="#" class="aiz-side-nav-link">
+                        <i class="las la-shopping-cart aiz-side-nav-icon"></i>
+                        <span class="aiz-side-nav-text">{{ translate('Product Enquiry') }}</span>
+                        <span class="aiz-side-nav-arrow"></span>
+                    </a>
+
+
+                    <!--Submenu-->
+                    <ul class="aiz-side-nav-list level-2">
+                        <li class="aiz-side-nav-item">
+                            <a href="{{ route('seller.productsEnquiry.create') }}"
+                                class="aiz-side-nav-link {{ areActiveRoutes(['seller.productsEnquiry.create', 'seller.productsEnquiry']) }}">
+                                <span class="aiz-side-nav-text">{{ translate('Add') }}</span>
+                            </a>
+                        </li>
+
+                            <li class="aiz-side-nav-item">
+                            <a href="{{ route('seller.productsEnquiry') }}"
+                                class="aiz-side-nav-link {{ areActiveRoutes(['seller.productsEnquiry.create', 'seller.productsEnquiry']) }}">
+                                <span class="aiz-side-nav-text">{{ translate('View') }}</span>
+                            </a>
+                        </li>
+
+                
+                      
+                    </ul>
+                </li>
 
 
             </ul><!-- .aiz-side-nav -->

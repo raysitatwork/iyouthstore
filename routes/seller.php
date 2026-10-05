@@ -7,6 +7,7 @@ use App\Http\Controllers\Seller\PurchaseController;
 use App\Http\Controllers\ProfileUpdateRequestController;
 use App\Http\Controllers\Seller\PaymentController;
 use App\Http\Controllers\Seller\ProfileController;
+use App\Http\Controllers\Seller\ProductEnquiryController;
 
 //Upload
 Route::group(['prefix' => 'seller', 'middleware' => ['seller', 'verified', 'user', 'prevent-back-history'], 'as' => 'seller.'], function () {
@@ -45,6 +46,22 @@ Route::group(['namespace' => 'App\Http\Controllers\Seller', 'prefix' => 'seller'
         // category-wise discount set
         Route::get('/categories-wise-product-discount', 'categoriesWiseProductDiscount')->name('categories_wise_product_discount');
         Route::post('/set-product-discount', 'setProductDiscount')->name('set_product_discount');
+    });
+
+
+    // product enquiry
+
+       Route::controller(ProductEnquiryController::class)->group(function () {
+        Route::get('/products/enquiry/add', 'create')->name('productsEnquiry.create');
+        Route::get('/product/enquiry/', 'index')->name('productsEnquiry');
+        Route::post('/products/enquiry/', 'store')->name('productEnquiry.store');
+        // Route::get('/product/{id}/edit', 'edit')->name('products.edit');
+        // Route::post('/products/update/{product}', 'update')->name('products.update');
+        // Route::get('/products/duplicate/{id}', 'duplicate')->name('products.duplicate');
+        // Route::post('/products/sku_combination', 'sku_combination')->name('products.sku_combination');
+        // Route::post('/products/sku_combination_edit', 'sku_combination_edit')->name('products.sku_combination_edit');
+        // Route::post('/products/add-more-choice-option', 'add_more_choice_option')->name('products.add-more-choice-option');
+        // Route::post('/products/seller/featured', 'updateFeatured')->name('products.featured');
     });
 
 

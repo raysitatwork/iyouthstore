@@ -99,7 +99,7 @@
                                 <th width="30%">{{ translate('Product') }}</th>
                                 <th data-breakpoints="md">{{ translate('Variation') }}</th>
                                 <th>{{ translate('Quantity') }}</th>
-                                <th data-breakpoints="md">{{ translate('Delivery Type') }}</th>
+                                {{-- <th data-breakpoints="md">{{ translate('Delivery Type') }}</th> --}}
                                 <th>{{ translate('Price') }}</th>
                                 @if (addon_is_activated('refund_request'))
                                     <th data-breakpoints="md">{{ translate('Refund') }}</th>
@@ -128,7 +128,7 @@
                                     <td>
                                         {{ $orderDetail->quantity }}
                                     </td>
-                                    <td>
+                                    {{-- <td>
                                         @if ($order->shipping_type != null && $order->shipping_type == 'home_delivery')
                                             {{ translate('Home Delivery') }}
                                         @elseif ($order->shipping_type == 'pickup_point')
@@ -146,47 +146,9 @@
                                                 {{ translate('Carrier') }}
                                             @endif
                                         @endif
-                                    </td>
+                                    </td> --}}
                                     <td class="fw-700">{{ single_price($orderDetail->price) }}</td>
-                                    @if (addon_is_activated('refund_request'))
-                                        @php
-                                            $no_of_max_day = $orderDetail->refund_days;
-
-                                            $last_refund_date = null;
-                                            if ($order->delivered_date && $no_of_max_day > 0) {
-                                                $last_refund_date = Carbon\Carbon::parse($order->delivered_date)->addDays($no_of_max_day);
-                                            }
-                                            
-                                            $today_date = Carbon\Carbon::now();
-                                            
-                                        @endphp
-                                        <td>
-                                            @if (
-                                                    $orderDetail->product != null &&
-                                                    $orderDetail->refund_request == null &&
-                                                    $last_refund_date &&
-                                                    $today_date <= $last_refund_date &&
-                                                    $order->payment_status == 'paid' &&
-                                                    $order->delivery_status == 'delivered'
-                                                )
-
-                                                <a href="{{ route('refund_request_send_page', $orderDetail->id) }}"
-                                                    class="btn btn-outline-dark btn-sm rounded-0">
-                                                    {{ translate('Send') }}
-                                                </a>
-                                            @elseif ($orderDetail->refund_request != null && $orderDetail->refund_request->refund_status == 0)
-                                                <b class="text-info">{{ translate('Pending') }}</b>
-                                            @elseif ($orderDetail->refund_request != null && $orderDetail->refund_request->refund_status == 2)
-                                                <b class="text-danger">{{ translate('Rejected') }}</b>
-                                            @elseif ($orderDetail->refund_request != null && $orderDetail->refund_request->refund_status == 1)
-                                                <b class="text-success">{{ translate('Approved') }}</b>
-                                            @elseif ($orderDetail->product != null && $orderDetail->refund_days != 0)
-                                                <b>{{ translate('N/A') }}</b>
-                                            @else
-                                                <b>{{ translate('Non-refundable') }}</b>
-                                            @endif
-                                        </td>
-                                    @endif
+                                
                                         <td class="text-xl-right pr-0">
                                             @if ($orderDetail->delivery_status == 'delivered')
                                                 <a href="javascript:void(0);" onclick="product_review('{{ $orderDetail->product_id }}')"
@@ -218,24 +180,24 @@
                                     <span class="strong-600">{{ single_price($order->orderDetails->sum('price')) }}</span>
                                 </td>
                             </tr>
-                            <tr>
+                            {{-- <tr>
                                 <td class="w-50 fw-600">{{ translate('Shipping') }}</td>
                                 <td class="text-right">
                                     <span class="text-italic">{{ single_price($order->orderDetails->sum('shipping_cost')) }}</span>
                                 </td>
-                            </tr>
+                            </tr> --}}
                             <tr>
                                 <td class="w-50 fw-600">{{ translate('Tax') }}</td>
                                 <td class="text-right">
                                     <span class="text-italic">{{ single_price($order->orderDetails->sum('tax')) }}</span>
                                 </td>
                             </tr>
-                            <tr>
+                            {{-- <tr>
                                 <td class="w-50 fw-600">{{ translate('Coupon') }}</td>
                                 <td class="text-right">
                                     <span class="text-italic">{{ single_price($order->coupon_discount) }}</span>
                                 </td>
-                            </tr>
+                            </tr> --}}
                             <tr>
                                 <td class="w-50 fw-600">{{ translate('Total') }}</td>
                                 <td class="text-right">
